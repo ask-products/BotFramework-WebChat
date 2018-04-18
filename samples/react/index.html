@@ -45,23 +45,29 @@
 
       ReactDOM.render(
         <BotChat.Chat
+          chatTitle={false} 
+          rootId='apd-form'
           bot={{
-            id: params.botid || 'botid',
-            name: params.botname || 'botname'
+            id: 'CLIENT_ID',
+            name: 'CLIENT_NAME'
+          }}
+          user={{
+            id: 'USER_ID',
+            name: 'Sam'
           }}
           directLine={{
-            domain: params.domain,
-            secret: params.s,
-            token: params.t,
-            webSocket: params.webSocket && params.webSocket === 'true' // defaults to true
+            // To continue with a previous conversation we need to pass the conversationId, this isn't needed when we start a new one
+            conversationId: 'DXp198QA15JJuWtAlhjqzy',
+            // For now we are using the secret from DirectLine but moving forward we'll need to get a token
+            secret: 'rF4ce0TJC6g.cwA.mpk.NwKLKc2zZk3V0k7sK8gPhsuM8zkA_EfRXizYtY02so0',
+            // domain: params.domain,
+            // token: params.t,
+            // In order to receive the history on a previous conversation we can't use polling for now
+            webSocket: false
           }}
           locale={ params.locale }
           resize="detect"
           // sendTyping={ true }    // defaults to false. set to true to send 'typing' activities to bot (and other users) when user is typing
-          user={{
-            id: params.userid || 'userid',
-            name: params.username || 'username'
-          }}
         />,
         document.getElementById('BotChatGoesHere')
       );

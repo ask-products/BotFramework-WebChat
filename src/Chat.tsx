@@ -27,7 +27,9 @@ export interface ChatProps {
     sendTyping?: boolean,
     showUploadButton?: boolean,
     formatOptions?: FormatOptions,
-    resize?: 'none' | 'window' | 'detect'
+    resize?: 'none' | 'window' | 'detect',
+    // TASSELL - Initial message
+    rootId?: string
 }
 
 import { History } from './History';
@@ -191,6 +193,17 @@ export class Chat extends React.Component<ChatProps, {}> {
             window.addEventListener('resize', this.resizeListener);
 
         this.store.dispatch<ChatActions>({ type: 'Start_Connection', user: this.props.user, bot: this.props.bot, botConnection, selectedActivity: this.props.selectedActivity });
+
+        // TASSELL - Auto start if new conversation
+        if(!this.props.directLine.conversationId) {
+          if(this.props.rootId) {
+            // Start the bot at the 'rootId' dialog as soon as component mounts
+            sendPostBack(botConnection, this.props.rootId, {}, this.props.user, '');
+          } else {
+            // Start the bot at the root dialog as soon as component mounts
+            sendPostBack(botConnection, '', {}, this.props.user, '');
+          }
+        }
 
         this.connectionStatusSubscription = botConnection.connectionStatus$.subscribe(connectionStatus =>{
                 if(this.props.speechOptions && this.props.speechOptions.speechRecognizer){
