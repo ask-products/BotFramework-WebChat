@@ -43,7 +43,12 @@
 
       window.botchatDebug = params.debug && params.debug === 'true';
 
+      function saveConversationId(conversationId) {
+        console.log(conversationId);
+      }
+
       ReactDOM.render(
+
         <BotChat.Chat
           chatTitle={false} 
           rootId='apd-form'
@@ -57,7 +62,7 @@
           }}
           directLine={{
             // To continue with a previous conversation we need to pass the conversationId, this isn't needed when we start a new one
-            conversationId: 'DXp198QA15JJuWtAlhjqzy',
+            //conversationId: 'DXp198QA15JJuWtAlhjqzy',
             // For now we are using the secret from DirectLine but moving forward we'll need to get a token
             secret: 'rF4ce0TJC6g.cwA.mpk.NwKLKc2zZk3V0k7sK8gPhsuM8zkA_EfRXizYtY02so0',
             // domain: params.domain,
@@ -66,7 +71,8 @@
             webSocket: false
           }}
           locale={ params.locale }
-          resize="detect"
+          resize="detect" 
+          saveConversationId={function() {this.saveConversationId}}
           // sendTyping={ true }    // defaults to false. set to true to send 'typing' activities to bot (and other users) when user is typing
         />,
         document.getElementById('BotChatGoesHere')
