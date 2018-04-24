@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { findDOMNode } from 'react-dom';
+//import { findDOMNode } from 'react-dom';
+import * as ReactDom from 'react-dom'
 import { connect } from 'react-redux';
 import { Action, AdaptiveCard, HostConfig, IValidationError, OpenUrlAction, SubmitAction } from 'adaptivecards';
 import { IAction, IAdaptiveCard, IOpenUrlAction, IShowCardAction, ISubmitAction } from 'adaptivecards/lib/schema';
@@ -134,9 +135,9 @@ class AdaptiveCardContainer extends React.Component<Props, State> {
     }
 
     unmountAdaptiveCards() {
-        const divElement = findDOMNode(this.divRef);
+        const divElement = ReactDom.findDOMNode(this.divRef);
 
-        [].forEach.call(divElement.children, (child: any) => divElement.removeChild(child));
+        [].forEach.call(divElement.childNodes, (child: any) => divElement.removeChild(child));
     }
 
     mountAdaptiveCards() {
@@ -183,7 +184,7 @@ class AdaptiveCardContainer extends React.Component<Props, State> {
                     }
                 }
 
-                findDOMNode(this.divRef).appendChild(renderedCard);
+                ReactDom.findDOMNode(this.divRef).appendChild(renderedCard);
 
                 return;
             }

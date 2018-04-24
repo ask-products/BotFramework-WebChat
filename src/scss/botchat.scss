@@ -406,10 +406,22 @@
 
 /* adaptive card adjustments from wc-card */
     .wc-adaptive-card {
-
         p {
             margin-left: 0;
             margin-right: 0;
+        }
+        .ac-container > div {
+            white-space: normal !important;
+        }
+        .ac-input {
+            input {
+                margin-top: 2px !important;
+            }
+            div {
+                flex: unset !important;
+                white-space: normal !important;
+                margin-left: 8px !important;
+            }
         }
     }
 
