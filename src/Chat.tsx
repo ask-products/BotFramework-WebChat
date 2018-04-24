@@ -32,7 +32,10 @@ export interface ChatProps {
     resize?: 'none' | 'window' | 'detect',
     // ASKPRO - What dialog to start with
     rootDialog?: string,
-    history?: Activity[]
+    // ASKPRO - History to inject
+    history?: Activity[],
+    // ASKPRO - Data to send to the bot
+    channelData?: any;
 }
 
 import { History } from './History';
@@ -212,8 +215,12 @@ export class Chat extends React.Component<ChatProps, {}> {
 
         // ASKPRO - Auto start if new conversation
         if(this.props.rootDialog) {
-          // Start the bot at the 'skill' dialog as soon as component mounts
-          sendPostBack(botConnection, this.props.rootDialog, {}, this.props.user, '');
+            // Start the bot at the 'skill' dialog as soon as component mounts
+            if (this.props.channelData) {
+                sendPostBack(botConnection, this.props.rootDialog, {}, this.props.user, '', this.props.channelData);
+            } else {
+                sendPostBack(botConnection, this.props.rootDialog, {}, this.props.user, '');
+            }
         }
 
         this.connectionStatusSubscription = botConnection.connectionStatus$.subscribe(connectionStatus =>{
@@ -356,13 +363,14 @@ export const doCardAction = (
         }
 }
 
-export const sendPostBack = (botConnection: IBotConnection, text: string, value: object, from: User, locale: string) => {
+export const sendPostBack = (botConnection: IBotConnection, text: string, value: object, from: User, locale: string, channelData?: any) => {
     botConnection.postActivity({
         type: "message",
         text,
         value,
         from,
-        locale
+        locale,
+        channelData,
     })
     .subscribe(id => {
         konsole.log("success sending postBack", id)
