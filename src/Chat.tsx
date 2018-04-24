@@ -1,9 +1,11 @@
 import * as React from 'react';
-import { findDOMNode } from 'react-dom';
+//import { findDOMNode } from 'react-dom';
+import * as ReactDom from 'react-dom';
 
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
+
+import {Subscription} from 'rxjs/Subscription';
 
 import { Activity, IBotConnection, User, DirectLine, DirectLineOptions, CardActionTypes } from 'botframework-directlinejs';
 import { createStore, ChatActions, sendMessage } from './Store';
@@ -28,9 +30,9 @@ export interface ChatProps {
     showUploadButton?: boolean,
     formatOptions?: FormatOptions,
     resize?: 'none' | 'window' | 'detect',
-    // ASKPRO - Initial message
-    rootId?: string,
-    saveConversationId?: (conversationId: IBotConnection) => void 
+    // ASKPRO - What dialog to start with
+    rootDialog?: string,
+    history?: Activity[]
 }
 
 import { History } from './History';
@@ -101,6 +103,14 @@ export class Chat extends React.Component<ChatProps, {}> {
         }
     }
 
+    // ASKPRO: Used to inject history from an external source
+    private injectHistory(activities: Activity[]) {
+        let state = this.store.getState();
+        activities.forEach(activity => {
+            this.store.dispatch<ChatActions>({ type: activity.from.id === state.connection.user.id ? 'Receive_Sent_Message' : 'Receive_Message', activity });
+        })
+    }
+
     private handleIncomingActivity(activity: Activity) {
         let state = this.store.getState();
         switch (activity.type) {
@@ -126,7 +136,7 @@ export class Chat extends React.Component<ChatProps, {}> {
     private handleCardAction() {
         // After the user click on any card action, we will "blur" the focus, by setting focus on message pane
         // This is for after click on card action, the user press "A", it should go into the chat box
-        const historyDOM = findDOMNode(this.historyRef) as HTMLElement;
+        const historyDOM = ReactDom.findDOMNode(this.historyRef) as HTMLElement;
 
         if (historyDOM) {
             historyDOM.focus();
@@ -150,7 +160,7 @@ export class Chat extends React.Component<ChatProps, {}> {
         }
 
         if (
-            target === findDOMNode(this.historyRef)
+            target === ReactDom.findDOMNode(this.historyRef)
             || typeof tabIndex !== 'number'
             || tabIndex < 0
         ) {
@@ -195,18 +205,16 @@ export class Chat extends React.Component<ChatProps, {}> {
 
         this.store.dispatch<ChatActions>({ type: 'Start_Connection', user: this.props.user, bot: this.props.bot, botConnection, selectedActivity: this.props.selectedActivity });
 
-        // ASKPRO - Auto start if new conversation
-        // if(!this.props.directLine.conversationId) {
-          if(this.props.rootId) {
-            // Start the bot at the 'rootId' dialog as soon as component mounts
-            sendPostBack(botConnection, this.props.rootId, {}, this.props.user, '');
-          } else {
-            // Start the bot at the root dialog as soon as component mounts
-            sendPostBack(botConnection, '', {}, this.props.user, '');
-          }
-        // }
+        // ASKPRO - Inject the history if supplied
+        if (this.props.history && this.props.history.length > 0) {
+            this.injectHistory(this.props.history);
+        }
 
-        this.props.saveConversationId(botConnection);
+        // ASKPRO - Auto start if new conversation
+        if(this.props.rootDialog) {
+          // Start the bot at the 'skill' dialog as soon as component mounts
+          sendPostBack(botConnection, this.props.rootDialog, {}, this.props.user, '');
+        }
 
         this.connectionStatusSubscription = botConnection.connectionStatus$.subscribe(connectionStatus =>{
                 if(this.props.speechOptions && this.props.speechOptions.speechRecognizer){
