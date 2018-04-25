@@ -33,9 +33,11 @@ export interface ChatProps {
     // ASKPRO - What dialog to start with
     rootDialog?: string,
     // ASKPRO - History to inject
-    history?: Activity[],
+    chatHistory?: Activity[],
     // ASKPRO - Data to send to the bot
-    channelData?: any;
+    channelData?: any,
+    // ASKPRO - To override the default blue
+    themeColour?: string
 }
 
 import { History } from './History';
@@ -63,10 +65,35 @@ export class Chat extends React.Component<ChatProps, {}> {
     private _saveHistoryRef = this.saveHistoryRef.bind(this);
     private _saveShellRef = this.saveShellRef.bind(this);
 
+    // ASKPRO - To store the theme colour
+    private Theme: any;
+
     constructor(props: ChatProps) {
         super(props);
 
         konsole.log("BotChat.Chat props", props);
+
+        // ASKPRO - Component to save styles to the page
+        this.Theme = () => {
+            let themeColour = this.props.themeColour || '#0078d7';
+            return (
+                <style dangerouslySetInnerHTML={{__html: `
+                    .wc-card button {
+                        color: ${themeColour};
+                    }
+                    .wc-card button:hover {
+                        border-color: ${themeColour};
+                        background-color: ${themeColour};
+                    }
+                    .wc-message-from-me .wc-message-content {
+                        background-color: ${themeColour};
+                    }
+                    .wc-console.has-text .wc-send svg {
+                        fill: ${themeColour};
+                    }
+                `}} />
+            )
+        }
 
         this.store.dispatch<ChatActions>({
             type: 'Set_Locale',
@@ -209,8 +236,8 @@ export class Chat extends React.Component<ChatProps, {}> {
         this.store.dispatch<ChatActions>({ type: 'Start_Connection', user: this.props.user, bot: this.props.bot, botConnection, selectedActivity: this.props.selectedActivity });
 
         // ASKPRO - Inject the history if supplied
-        if (this.props.history && this.props.history.length > 0) {
-            this.injectHistory(this.props.history);
+        if (this.props.chatHistory && this.props.chatHistory.length > 0) {
+            this.injectHistory(this.props.chatHistory);
         }
 
         // ASKPRO - Auto start if new conversation
@@ -298,6 +325,7 @@ export class Chat extends React.Component<ChatProps, {}> {
                     onKeyDownCapture={ this._handleKeyDownCapture }
                     ref={ this._saveChatviewPanelRef }
                 >
+                    <this.Theme/>
                     {
                         !!state.format.chatTitle &&
                             <div className="wc-header">
