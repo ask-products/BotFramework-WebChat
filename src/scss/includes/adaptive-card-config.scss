@@ -33,8 +33,8 @@ $hostConfig: (
       backgroundColor: "#00000000",   //using 8 digit hex Adaptive Card color format for transparent ("Transparent" will not be recognized)
       foregroundColors: (
         default: (
-          default: $c00,
-          subtle: $c08
+          default: $c00b,
+          subtle: $c00b
         ),
         accent: (
           default: rgb(46, 137, 252),
