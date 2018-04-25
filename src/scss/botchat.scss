@@ -213,7 +213,9 @@
         padding-right: 8px;
     }
 
+    // ASKPRO
     .wc-message svg.wc-message-callout {
+        display: none;
         height: 22px;
         position: absolute;
         stroke: none;
@@ -221,9 +223,10 @@
         width: 6px;
     }
 
+    // ASKPRO
     .wc-message-content {
-        border-radius: 2px;
-        box-shadow: 0px 1px 1px 0px $c_shadow;
+        border-radius: 6px;
+        // box-shadow: 0px 1px 1px 0px $c_shadow;
         padding: 8px;
         word-break: break-word;
       }
@@ -256,32 +259,46 @@
     .wc-message-from {
         clear: both;
         color: $c_timestamp;
-        font-size: 11px;
-        margin-top: 5px;
+        font-size: 12px;
+        margin-top: 4px;
     }
 
 /* cards */
 
     .wc-card {
 
+        // ASKPRO
         background-color: $c01;
+        border-color: transparent !important;
+        border-radius: 4px;
+
+        //ASKPRO
+        .ac-image {
+            border-radius: 4px;
+            overflow: hidden;
+        }
 
         .non-adaptive-content {
             margin: $card_padding $card_padding 0 $card_padding;
         }
 
+        // ASKPRO
         button {
-            background-color: transparent;
+            background-color: $c01;
             color: $c_brand;
+            border-color: #EEEEEE;
             min-height: 32px;
             width: 100%;
             padding: 0 16px;
+            border-radius: 4px;
+            text-transform: capitalize;
+            font-weight: 400;
         }
 
         button:hover {
-            background-color: transparent;
+            background-color: $c_brand;
             border-color: $c_brand;
-            color: $c_brand;
+            color: $c01;
         }
 
         button:active {
@@ -355,12 +372,16 @@
         &.receipt tfoot .total {
             font-weight: bold;
         }
-
+        // ASKPRO
         &.thumbnail img {
             float: right;
-            margin-bottom: 10px;
-            margin-left: 10px;
+            // margin-bottom: 10px;
+            // margin-left: 10px;
             width: 100px;
+        }
+        &.thumbnail .ac-image {
+            margin-bottom: 6px;
+            margin-left: 6px;
         }
 
         &.signin h1 {
@@ -430,7 +451,7 @@
     .wc-list > .wc-card {
         margin-top: 8px;
     }
-
+    
     .wc-list > .wc-card:first-child {
         margin-top: 0;
     }
@@ -464,13 +485,17 @@
         position: relative;
 
         button.scroll {
-            background-color: $c11;
-            height: 28px;
+            background-color: $c01;
+            height: 48px;
             overflow: hidden;
             padding: 0;
             position: absolute;
-            top: 50%;
+            top: calc(50% - 24px);
             width: 28px;
+            border-radius: 4px;
+            border-width: 0;
+            border-color: #EEEEEE;
+            box-shadow: 0 0 2px $c_shadow;
         }
 
         button.scroll:disabled {
@@ -479,19 +504,23 @@
 
         button.scroll:focus,
         button.scroll:hover {
-            background-color:  $c08;
+            background-color:  $c_brand;
+            svg {
+                fill: $c01;
+            }
         }
 
         button.scroll svg {
-            fill: $c01;
+            fill: $c_brand;
+            margin-top: 10px;
         }
 
         button.scroll.previous {
-            left: -16px;
+            left: -12px;
         }
 
         button.scroll.next {
-            right: -16px;
+            right: -12px;
         }
 
         .wc-hscroll > ul {

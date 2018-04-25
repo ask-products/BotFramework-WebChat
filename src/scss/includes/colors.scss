@@ -5,9 +5,11 @@ $c02: rgba(0, 0, 0, 0.2);
 $c03: #8a8a8a;
 $c04: #999999;
 $c05: #cccccc;
-$c06: #767676; // used for timestamp under chat bubbles
+$c05b: #bbbbbb; // used for timestamp under chat bubbles
+$c06: #767676;
 $c07: #0078d7;
 $c08: #808c95;
+$c08b: #f5f5f5; // used for message-from
 $c09: #eceff1;
 $c10: #dbdee1;
 $c11: #d2dde5;
@@ -21,5 +23,5 @@ $c_textHeading: $c08;
 $c_textLight: $c04;
 
 $c_messageFromMe: $c_brand;
-$c_messageFromThem: $c09;
-$c_timestamp: $c06;
+$c_messageFromThem: $c08b;
+$c_timestamp: $c05b;
