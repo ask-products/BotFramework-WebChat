@@ -243,6 +243,7 @@
     .wc-message-content img {
         max-height: 320px;
         max-width: 100%;
+        width: 100%;
     }
 
     .wc-message-content .video iframe {
@@ -251,6 +252,7 @@
 
     .wc-message-content audio, .wc-message-content video {
         max-width: 100%;
+        width: 100%;
     }
 
     .wc-message-content audio+h1, .wc-message-content video+h1 {
@@ -278,9 +280,13 @@
             border-radius: 4px;
             overflow: hidden;
         }
-
+        //ASKPRO
         .non-adaptive-content {
             margin: $card_padding $card_padding 0 $card_padding;
+            display: inline-block;
+            width: calc(100% - ( #{$card_padding} * 2 ) );
+            border-radius: 4px;
+            overflow: hidden;
         }
 
         // ASKPRO
