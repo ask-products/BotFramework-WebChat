@@ -248,6 +248,9 @@
 
     .wc-message-content .video iframe {
         border: 0;
+        width: 100%;
+        display: block;
+        height: 188px;
     }
 
     .wc-message-content audio, .wc-message-content video {
