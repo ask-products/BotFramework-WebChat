@@ -2,12 +2,11 @@
 @mixin card-size($cardWidth) {
 
     .wc-card {
-        border: $card_borderWidth solid #d2dde5;
-        width: $cardWidth - 2 * ($card_padding + $card_borderWidth);
+        width: $cardWidth - 2 * ($card_padding);
     }
 
     .wc-adaptive-card {
-        width: $cardWidth - 2 * $card_borderWidth;
+        width: $cardWidth - 2;
     }
     
 }
