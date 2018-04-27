@@ -91,6 +91,9 @@ export class Chat extends React.Component<ChatProps, {}> {
                     .wc-console.has-text .wc-send svg {
                         fill: ${themeColour};
                     }
+                    .wc-console .wc-upload:hover svg {
+                        fill: ${themeColour};
+                    }
                 `}} />
             )
         }

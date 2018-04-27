@@ -641,8 +641,8 @@
         }
 
         svg {
-            fill: $c03;
-            margin: 11px;
+            fill: $c05;
+            margin: 4px;
         }
 
         input[type=text],
@@ -663,10 +663,16 @@
             cursor: pointer;
             position: relative;
             margin-top: 4px;
+            margin-left: 4px;
 
             svg {
-                height: 18px;
-                width: 26px;
+                height: 32px;
+                width: 32px;
+            }
+            &:hover {
+                svg {
+                    fill: $c_brand;
+                }
             }
         }
 
@@ -684,6 +690,7 @@
         .wc-send {
             right: 0;
             margin-top: 4px;
+            margin-right: 4px;
         }
 
         .wc-send.hidden {
@@ -691,18 +698,18 @@
         }
 
         &.has-upload-button .wc-textbox {
-            left: 48px;
+            left: 46px;
         }
 
         .wc-textbox {
             bottom: 0;
             left: 11px;
-            right: 49px;
+            right: 47px;
 
             input {
                 background-color: transparent;
                 border: 1px solid #dddddd;
-                border-radius: 6px;
+                border-radius: 18px;
                 height: 36px;
                 padding: 14px;
                 margin-top: 6px;
@@ -727,8 +734,8 @@
 
         .wc-send {
             svg {
-                height: 18px;
-                width: 27px;
+                height: 32px;
+                width: 32px;
             }
         }
 
@@ -744,7 +751,7 @@
     }
 
     .wc-console.has-text .wc-send svg {
-        fill: $c07;
+        fill: $c_brand;
     }
 
 /* animation */
