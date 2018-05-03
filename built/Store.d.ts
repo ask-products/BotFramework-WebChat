@@ -12,6 +12,7 @@ export declare enum ListeningState {
 }
 export declare const sendMessage: (text: string, from: User, locale: string) => ChatActions;
 export declare const sendFiles: (files: FileList, from: User, locale: string) => ChatActions;
+export declare const apSendFiles: (files: FileList, from: User, locale: string) => ChatActions;
 export interface ShellState {
     sendTyping: boolean;
     input: string;

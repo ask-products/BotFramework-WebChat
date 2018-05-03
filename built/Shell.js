@@ -38,7 +38,7 @@ var ShellContainer = (function (_super) {
         this.sendMessage();
     };
     ShellContainer.prototype.onChangeFile = function () {
-        this.props.sendFiles(this.fileInput.files);
+        this.props.apSendFiles(this.fileInput.files);
         this.fileInput.value = null;
         this.textInput.focus();
     };
@@ -104,7 +104,8 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     startListening: function () { return ({ type: 'Listening_Starting' }); },
     // only used to create helper functions below
     sendMessage: Store_1.sendMessage,
-    sendFiles: Store_1.sendFiles
+    sendFiles: Store_1.sendFiles,
+    apSendFiles: Store_1.apSendFiles
 }, function (stateProps, dispatchProps, ownProps) { return ({
     // from stateProps
     inputText: stateProps.inputText,
@@ -116,6 +117,7 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     // helper functions
     sendMessage: function (text) { return dispatchProps.sendMessage(text, stateProps.user, stateProps.locale); },
     sendFiles: function (files) { return dispatchProps.sendFiles(files, stateProps.user, stateProps.locale); },
+    apSendFiles: function (files) { return dispatchProps.apSendFiles(files, stateProps.user, stateProps.locale); },
     startListening: function () { return dispatchProps.startListening(); },
     stopListening: function () { return dispatchProps.stopListening(); }
 }); }, {

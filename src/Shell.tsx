@@ -5,7 +5,7 @@ import { classList } from './Chat';
 import { Dispatch, connect } from 'react-redux';
 import { Strings } from './Strings';
 import { Speech } from './SpeechModule'
-import { ChatActions, ListeningState, sendMessage, sendFiles } from './Store';
+import { ChatActions, ListeningState, sendMessage, sendFiles, apSendFiles } from './Store';
 
 interface Props {
     inputText: string,
@@ -17,6 +17,7 @@ interface Props {
 
     sendMessage: (inputText: string) => void,
     sendFiles: (files: FileList) => void,
+    apSendFiles: (files: FileList) => void,
     stopListening: () => void,
     startListening: () => void
 }
@@ -61,7 +62,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
     }
 
     private onChangeFile() {
-        this.props.sendFiles(this.fileInput.files);
+        this.props.apSendFiles(this.fileInput.files);
         this.fileInput.value = null;
         this.textInput.focus();
     }
@@ -209,7 +210,8 @@ export const Shell = connect(
         startListening:  () => ({ type: 'Listening_Starting' }),
         // only used to create helper functions below
         sendMessage,
-        sendFiles
+        sendFiles,
+        apSendFiles
     }, (stateProps: any, dispatchProps: any, ownProps: any): Props => ({
         // from stateProps
         inputText: stateProps.inputText,
@@ -221,6 +223,7 @@ export const Shell = connect(
         // helper functions
         sendMessage: (text: string) => dispatchProps.sendMessage(text, stateProps.user, stateProps.locale),
         sendFiles: (files: FileList) => dispatchProps.sendFiles(files, stateProps.user, stateProps.locale),
+        apSendFiles: (files: FileList) => dispatchProps.apSendFiles(files, stateProps.user, stateProps.locale),
         startListening: () => dispatchProps.startListening(),
         stopListening: () => dispatchProps.stopListening()
     }), {

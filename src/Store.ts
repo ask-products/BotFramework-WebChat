@@ -37,6 +37,54 @@ export const sendFiles = (files: FileList, from: User, locale: string) => ({
         locale
     }} as ChatActions);
 
+///////////////////////////
+// ASKPRO - Upload handler
+export const apSendFiles = (files: FileList, from: User, locale: string) => ({
+        type: 'Send_Message',
+        activity: {
+            type: "message",
+            attachments: apUriFromFiles(files),
+            from,
+            locale
+        }} as ChatActions);
+
+const apUriFromFiles = (files: FileList) =>{
+    // lambda upload handler code in here.
+    const attachments: Media[] = [];
+    console.log(files);
+    let linkRequest = new Promise((resolve, reject) => {
+        httpRequest(files).then((res: any) => {
+            resolve(res.json());
+        }).catch((err: any) => {
+            reject(err);
+        });
+    });
+    linkRequest.then((r) => {
+        attachments.push({
+            contentType: 'image/png' as MediaType,
+            contentUrl: 'http://a.fake.url',
+            name: 'file name'
+        });
+    });
+    return attachments;
+}
+const httpRequest = (files: FileList) => {
+    const token = localStorage.getItem('access_token');
+    let headers = new Headers();
+    headers.append('Authorization','Bearer ' + token);
+    headers.append('content-type', 'application/json');
+    const url = 'https://api.re-porter.co/upload';
+    const method = 'POST';
+    headers.append('content-type', 'application/json');
+    return fetch(url, {
+        headers: headers,
+        method: method,
+        body: JSON.stringify(files),
+    });
+}
+// END ASKPRO - Upload handler
+///////////////////////////////
+
 const attachmentsFromFiles = (files: FileList) => {
     const attachments: Media[] = [];
     for (let i = 0, numFiles = files.length; i < numFiles; i++) {
