@@ -72,6 +72,7 @@ var Chat = (function (_super) {
         var state = this.store.getState();
         switch (activity.type) {
             case "message":
+                console.log(activity);
                 this.store.dispatch({ type: activity.from.id === state.connection.user.id ? 'Receive_Sent_Message' : 'Receive_Message', activity: activity });
                 break;
             case "typing":

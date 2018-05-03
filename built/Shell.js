@@ -38,8 +38,7 @@ var ShellContainer = (function (_super) {
         this.sendMessage();
     };
     ShellContainer.prototype.onChangeFile = function () {
-        console.log(this.fileInput.files);
-        // this.props.sendFiles(this.fileInput.files);
+        this.props.sendFiles(this.fileInput.files);
         this.fileInput.value = null;
         this.textInput.focus();
     };

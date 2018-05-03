@@ -1730,6 +1730,7 @@ var Chat = (function (_super) {
         var state = this.store.getState();
         switch (activity.type) {
             case "message":
+                console.log(activity);
                 this.store.dispatch({ type: activity.from.id === state.connection.user.id ? 'Receive_Sent_Message' : 'Receive_Message', activity: activity });
                 break;
             case "typing":
@@ -19209,8 +19210,7 @@ var ShellContainer = (function (_super) {
         this.sendMessage();
     };
     ShellContainer.prototype.onChangeFile = function () {
-        console.log(this.fileInput.files);
-        // this.props.sendFiles(this.fileInput.files);
+        this.props.sendFiles(this.fileInput.files);
         this.fileInput.value = null;
         this.textInput.focus();
     };
