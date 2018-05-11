@@ -44,11 +44,11 @@ var putFile = function (response, file) { return tslib_1.__awaiter(_this, void 0
                 data: file
             })
                 .then(function (r) {
-                return ({
-                    contentUrl: 'https://s3-eu-west-1.amazonaws.com/re-porter-customer-files/' + response.fileName,
-                    contentType: file.type,
-                    name: file.name
-                });
+                return ([{
+                        contentUrl: 'https://s3-eu-west-1.amazonaws.com/re-porter-customer-files/' + response.fileName,
+                        contentType: file.type,
+                        name: file.name
+                    }]);
             })];
     });
 }); };

@@ -3130,11 +3130,11 @@ exports.sendFiles = function (files, from, locale) { return ({
 }); };
 ///////////////////////////
 // ASKPRO - Upload handler
-exports.apSendFiles = function (attachments, from, locale) { return ({
+exports.apSendFiles = function (attachment, from, locale) { return ({
     type: 'Send_Message',
     activity: {
         type: "message",
-        attachments: attachments,
+        attachments: attachment,
         from: from,
         locale: locale
     }
@@ -4651,8 +4651,9 @@ var DirectLine = (function () {
         // Use postMessageWithAttachments for messages with attachments that are local files (e.g. an image to upload)
         // Technically we could use it for *all* activities, but postActivity is much lighter weight
         // So, since WebChat is partially a reference implementation of Direct Line, we implement both.
-        if (activity.type === "message" && activity.attachments && activity.attachments.length > 0)
-            return this.postMessageWithAttachments(activity);
+        console.log('WE WILL STPO YOU');
+        // if (activity.type === "message" && activity.attachments && activity.attachments.length > 0)
+        //     return this.postMessageWithAttachments(activity);
         // If we're not connected to the bot, get connected
         // Will throw an error if we are not connected
         konsole.log("postActivity", activity);
@@ -19909,11 +19910,11 @@ var ShellContainer = (function (_super) {
         // do we make the file calls here? 
         file_upload_1.apUriFromFiles(this.fileInput.files)
             .then(function (attachment) {
-            console.log('file change', attachment);
+            // console.log('file change', attachment);
             _this.props.apSendFiles(attachment);
+            _this.fileInput.value = null;
+            _this.textInput.focus();
         });
-        this.fileInput.value = null;
-        this.textInput.focus();
     };
     ShellContainer.prototype.onTextInputFocus = function () {
         if (this.props.listeningState === Store_1.ListeningState.STARTED) {
@@ -19990,7 +19991,7 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     // helper functions
     sendMessage: function (text) { return dispatchProps.sendMessage(text, stateProps.user, stateProps.locale); },
     sendFiles: function (files) { return dispatchProps.sendFiles(files, stateProps.user, stateProps.locale); },
-    apSendFiles: function (files) { return dispatchProps.apSendFiles(files, stateProps.user, stateProps.locale); },
+    apSendFiles: function (attachment) { return dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale); },
     startListening: function () { return dispatchProps.startListening(); },
     stopListening: function () { return dispatchProps.stopListening(); }
 }); }, {
@@ -20565,11 +20566,11 @@ var putFile = function (response, file) { return tslib_1.__awaiter(_this, void 0
                 data: file
             })
                 .then(function (r) {
-                return ({
-                    contentUrl: 'https://s3-eu-west-1.amazonaws.com/re-porter-customer-files/' + response.fileName,
-                    contentType: file.type,
-                    name: file.name
-                });
+                return ([{
+                        contentUrl: 'https://s3-eu-west-1.amazonaws.com/re-porter-customer-files/' + response.fileName,
+                        contentType: file.type,
+                        name: file.name
+                    }]);
             })];
     });
 }); };

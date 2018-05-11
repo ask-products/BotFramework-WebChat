@@ -38,11 +38,11 @@ export const sendFiles = (files: FileList, from: User, locale: string) => ({
 
 ///////////////////////////
 // ASKPRO - Upload handler
-export const apSendFiles = (attachments: any, from: User, locale: string) => ({
+export const apSendFiles = (attachment: any, from: User, locale: string) => ({
         type: 'Send_Message',
         activity: {
             type: "message",
-            attachments: attachments,
+            attachments: attachment,
             from,
             locale
         }} as ChatActions);

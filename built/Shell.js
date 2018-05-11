@@ -44,11 +44,11 @@ var ShellContainer = (function (_super) {
         // do we make the file calls here? 
         file_upload_1.apUriFromFiles(this.fileInput.files)
             .then(function (attachment) {
-            console.log('file change', attachment);
+            // console.log('file change', attachment);
             _this.props.apSendFiles(attachment);
+            _this.fileInput.value = null;
+            _this.textInput.focus();
         });
-        this.fileInput.value = null;
-        this.textInput.focus();
     };
     ShellContainer.prototype.onTextInputFocus = function () {
         if (this.props.listeningState === Store_1.ListeningState.STARTED) {
@@ -125,7 +125,7 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     // helper functions
     sendMessage: function (text) { return dispatchProps.sendMessage(text, stateProps.user, stateProps.locale); },
     sendFiles: function (files) { return dispatchProps.sendFiles(files, stateProps.user, stateProps.locale); },
-    apSendFiles: function (files) { return dispatchProps.apSendFiles(files, stateProps.user, stateProps.locale); },
+    apSendFiles: function (attachment) { return dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale); },
     startListening: function () { return dispatchProps.startListening(); },
     stopListening: function () { return dispatchProps.stopListening(); }
 }); }, {

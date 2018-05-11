@@ -71,11 +71,11 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
         // do we make the file calls here? 
         apUriFromFiles(this.fileInput.files)
         .then((attachment) => {
-            console.log('file change', attachment);
+            // console.log('file change', attachment);
             this.props.apSendFiles(attachment);
-        });
             this.fileInput.value = null;
             this.textInput.focus();
+        });
     }
 
     private onTextInputFocus(){
@@ -234,7 +234,7 @@ export const Shell = connect(
         // helper functions
         sendMessage: (text: string) => dispatchProps.sendMessage(text, stateProps.user, stateProps.locale),
         sendFiles: (files: FileList) => dispatchProps.sendFiles(files, stateProps.user, stateProps.locale),
-        apSendFiles: (files: FileList) => dispatchProps.apSendFiles(files, stateProps.user, stateProps.locale),
+        apSendFiles: (attachment: any) => dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale),
         startListening: () => dispatchProps.startListening(),
         stopListening: () => dispatchProps.stopListening()
     }), {

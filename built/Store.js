@@ -36,11 +36,11 @@ exports.sendFiles = function (files, from, locale) { return ({
 }); };
 ///////////////////////////
 // ASKPRO - Upload handler
-exports.apSendFiles = function (attachments, from, locale) { return ({
+exports.apSendFiles = function (attachment, from, locale) { return ({
     type: 'Send_Message',
     activity: {
         type: "message",
-        attachments: attachments,
+        attachments: attachment,
         from: from,
         locale: locale
     }

@@ -39,11 +39,11 @@ const putFile = async (response: any, file: any) => {
         data:       file
     })
     .then((r) => {
-        return ({
+        return ([{
             contentUrl:     'https://s3-eu-west-1.amazonaws.com/re-porter-customer-files/' + response.fileName,
             contentType:    file.type,
             name:           file.name
-        })
+        }]);
     });
 }
 const apUriFromFiles = (files: any) =>{
