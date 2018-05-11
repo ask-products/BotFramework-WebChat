@@ -36,49 +36,15 @@ exports.sendFiles = function (files, from, locale) { return ({
 }); };
 ///////////////////////////
 // ASKPRO - Upload handler
-exports.apSendFiles = function (files, from, locale) { return ({
+exports.apSendFiles = function (attachments, from, locale) { return ({
     type: 'Send_Message',
     activity: {
         type: "message",
-        attachments: apUriFromFiles(files),
+        attachments: attachments,
         from: from,
         locale: locale
     }
 }); };
-var apUriFromFiles = function (files) {
-    // lambda upload handler code in here.
-    var attachments = [];
-    console.log(files);
-    var linkRequest = new Promise(function (resolve, reject) {
-        httpRequest(files).then(function (res) {
-            resolve(res.json());
-        }).catch(function (err) {
-            reject(err);
-        });
-    });
-    linkRequest.then(function (r) {
-        attachments.push({
-            contentType: 'image/png',
-            contentUrl: 'http://a.fake.url',
-            name: 'file name'
-        });
-    });
-    return attachments;
-};
-var httpRequest = function (files) {
-    var token = localStorage.getItem('access_token');
-    var headers = new Headers();
-    headers.append('Authorization', 'Bearer ' + token);
-    headers.append('content-type', 'application/json');
-    var url = 'https://api.re-porter.co/upload';
-    var method = 'POST';
-    headers.append('content-type', 'application/json');
-    return fetch(url, {
-        headers: headers,
-        method: method,
-        body: JSON.stringify(files),
-    });
-};
 // END ASKPRO - Upload handler
 ///////////////////////////////
 var attachmentsFromFiles = function (files) {
@@ -91,6 +57,7 @@ var attachmentsFromFiles = function (files) {
             name: file.name
         });
     }
+    console.log(attachments);
     return attachments;
 };
 exports.shell = function (state, action) {

@@ -7,6 +7,12 @@ import { Strings } from './Strings';
 import { Speech } from './SpeechModule'
 import { ChatActions, ListeningState, sendMessage, sendFiles, apSendFiles } from './Store';
 
+
+// ASKPRO
+import { apUriFromFiles } from './ask_pro/file_upload';
+import { AttachmentView } from './Attachment';
+// END ASKPRO
+
 interface Props {
     inputText: string,
     strings: Strings,
@@ -17,7 +23,7 @@ interface Props {
 
     sendMessage: (inputText: string) => void,
     sendFiles: (files: FileList) => void,
-    apSendFiles: (files: FileList) => void,
+    apSendFiles: (attachment: any) => void,
     stopListening: () => void,
     startListening: () => void
 }
@@ -62,9 +68,14 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
     }
 
     private onChangeFile() {
-        this.props.apSendFiles(this.fileInput.files);
-        this.fileInput.value = null;
-        this.textInput.focus();
+        // do we make the file calls here? 
+        apUriFromFiles(this.fileInput.files)
+        .then((attachment) => {
+            console.log('file change', attachment);
+            this.props.apSendFiles(attachment);
+        });
+            this.fileInput.value = null;
+            this.textInput.focus();
     }
 
     private onTextInputFocus(){

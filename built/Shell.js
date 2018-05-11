@@ -6,6 +6,8 @@ var Chat_1 = require("./Chat");
 var react_redux_1 = require("react-redux");
 var SpeechModule_1 = require("./SpeechModule");
 var Store_1 = require("./Store");
+// ASKPRO
+var file_upload_1 = require("./ask_pro/file_upload");
 var ShellContainer = (function (_super) {
     tslib_1.__extends(ShellContainer, _super);
     function ShellContainer() {
@@ -38,7 +40,13 @@ var ShellContainer = (function (_super) {
         this.sendMessage();
     };
     ShellContainer.prototype.onChangeFile = function () {
-        this.props.apSendFiles(this.fileInput.files);
+        var _this = this;
+        // do we make the file calls here? 
+        file_upload_1.apUriFromFiles(this.fileInput.files)
+            .then(function (attachment) {
+            console.log('file change', attachment);
+            _this.props.apSendFiles(attachment);
+        });
         this.fileInput.value = null;
         this.textInput.focus();
     };
