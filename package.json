@@ -33,7 +33,7 @@
     "adaptivecards": "1.0.0",
     "axios": "^0.17.1",
     "bluebird": "^3.5.1",
-    "botframework-directlinejs": "file:../botframework-directlinejs",
+    "botframework-directlinejs": "github:ask-products/BotFramework-DirectLineJS",
     "core-js": "2.4.1",
     "jspeech": "^0.1.1",
     "markdown-it": "8.3.1",
