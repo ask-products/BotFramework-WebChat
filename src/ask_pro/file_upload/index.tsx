@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-const ax = axios.create();
+const ax = axios.create({ baseURL: '', timeout: 1000, headers: '' });
 
 const getSignedUrl = async (file: any) => {
     const authResult = JSON.parse(localStorage.getItem('auth_result'));
@@ -17,7 +17,6 @@ const getSignedUrl = async (file: any) => {
     return ax.request({
         url:        'https://j0gzx3un1j.execute-api.eu-west-1.amazonaws.com/dev/gen',
         method:     'GET',
-        headers:    {'Authorization': 'test'},
         params:     {
                         fileType: file.type,
                         fileName: info.domain+'/'+ident+'/'+file.name

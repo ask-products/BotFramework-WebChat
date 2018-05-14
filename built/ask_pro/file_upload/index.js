@@ -3,7 +3,7 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var axios_1 = require("axios");
-var ax = axios_1.default.create();
+var ax = axios_1.default.create({ baseURL: '', timeout: 1000, headers: '' });
 var getSignedUrl = function (file) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
     var authResult, info, profile, key, ident;
     return tslib_1.__generator(this, function (_a) {
@@ -20,7 +20,6 @@ var getSignedUrl = function (file) { return tslib_1.__awaiter(_this, void 0, voi
         return [2 /*return*/, ax.request({
                 url: 'https://j0gzx3un1j.execute-api.eu-west-1.amazonaws.com/dev/gen',
                 method: 'GET',
-                headers: { 'Authorization': 'test' },
                 params: {
                     fileType: file.type,
                     fileName: info.domain + '/' + ident + '/' + file.name
