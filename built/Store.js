@@ -88,6 +88,22 @@ exports.shell = function (state, action) {
             return state;
     }
 };
+///////////////////////////////
+// ASKPRO - Upload Ui
+exports.setUploadState = function (newState) {
+    _this.store.dispatch({ type: 'Set_Upload_State', newState: newState });
+};
+exports.upload = function (state, action) {
+    if (state === void 0) { state = {
+        uploadState: 'DEFAULT'
+    }; }
+    switch (action.type) {
+        case 'Set_Upload_State':
+            return tslib_1.__assign({}, state, { uploadState: action.newState });
+        default:
+            return state;
+    }
+};
 exports.format = function (state, action) {
     if (state === void 0) { state = {
         chatTitle: true,
@@ -417,7 +433,8 @@ exports.createStore = function () {
         format: exports.format,
         history: exports.history,
         shell: exports.shell,
-        size: exports.size
+        size: exports.size,
+        upload: exports.upload
     }), redux_1.applyMiddleware(redux_observable_1.createEpicMiddleware(redux_observable_1.combineEpics(updateSelectedActivityEpic, sendMessageEpic, trySendMessageEpic, retrySendMessageEpic, showTypingEpic, sendTypingEpic, speakSSMLEpic, speakOnMessageReceivedEpic, startListeningEpic, stopListeningEpic, stopSpeakingEpic, listeningSilenceTimeoutEpic))));
 };
 //# sourceMappingURL=Store.js.map

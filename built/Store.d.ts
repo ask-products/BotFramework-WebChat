@@ -48,6 +48,15 @@ export declare type ShellAction = {
     autoListenAfterSpeak: boolean;
 };
 export declare const shell: Reducer<ShellState>;
+export declare const setUploadState: (newState: string) => void;
+export interface UploadState {
+    uploadState: string;
+}
+export declare type UploadActions = {
+    type: 'Set_Upload_State';
+    newState: string;
+};
+export declare const upload: Reducer<UploadState>;
 export interface FormatState {
     chatTitle: boolean | string;
     locale: string;
@@ -132,7 +141,7 @@ export declare type AdaptiveCardsAction = {
     payload: any;
 };
 export declare const adaptiveCards: Reducer<AdaptiveCardsState>;
-export declare type ChatActions = ShellAction | FormatAction | SizeAction | ConnectionAction | HistoryAction | AdaptiveCardsAction;
+export declare type ChatActions = ShellAction | FormatAction | SizeAction | ConnectionAction | HistoryAction | AdaptiveCardsAction | UploadActions;
 export interface ChatState {
     adaptiveCards: AdaptiveCardsState;
     connection: ConnectionState;
@@ -140,6 +149,7 @@ export interface ChatState {
     history: HistoryState;
     shell: ShellState;
     size: SizeState;
+    upload: UploadState;
 }
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/delay';

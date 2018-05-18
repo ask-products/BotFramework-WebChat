@@ -2978,6 +2978,22 @@ exports.shell = function (state, action) {
             return state;
     }
 };
+///////////////////////////////
+// ASKPRO - Upload Ui
+exports.setUploadState = function (newState) {
+    _this.store.dispatch({ type: 'Set_Upload_State', newState: newState });
+};
+exports.upload = function (state, action) {
+    if (state === void 0) { state = {
+        uploadState: 'DEFAULT'
+    }; }
+    switch (action.type) {
+        case 'Set_Upload_State':
+            return tslib_1.__assign({}, state, { uploadState: action.newState });
+        default:
+            return state;
+    }
+};
 exports.format = function (state, action) {
     if (state === void 0) { state = {
         chatTitle: true,
@@ -3307,7 +3323,8 @@ exports.createStore = function () {
         format: exports.format,
         history: exports.history,
         shell: exports.shell,
-        size: exports.size
+        size: exports.size,
+        upload: exports.upload
     }), redux_1.applyMiddleware(redux_observable_1.createEpicMiddleware(redux_observable_1.combineEpics(updateSelectedActivityEpic, sendMessageEpic, trySendMessageEpic, retrySendMessageEpic, showTypingEpic, sendTypingEpic, speakSSMLEpic, speakOnMessageReceivedEpic, startListeningEpic, stopListeningEpic, stopSpeakingEpic, listeningSilenceTimeoutEpic))));
 };
 
@@ -13748,12 +13765,15 @@ var ShellContainer = (function (_super) {
         var _this = this;
         // do we make the file calls here? 
         // apUriFromFiles(this.fileInput.files)
+        // this.props.uploadingState('UPLOADING');
         var calls = file_upload_1.apUriFromFiles(this.fileInput.files);
+        Store_1.setUploadState('UPLOADING');
         for (var _i = 0, calls_1 = calls; _i < calls_1.length; _i++) {
             var call = calls_1[_i];
             var attachment = [call];
             call.then(function (value) {
                 _this.props.apSendFiles([value]);
+                Store_1.setUploadState('DEFAULT');
                 _this.fileInput.value = null;
                 _this.textInput.focus();
             })
@@ -13788,6 +13808,16 @@ var ShellContainer = (function (_super) {
             this.props.onChangeText(this.props.inputText + appendKey);
         }
     };
+    ShellContainer.prototype.fileIcon = function (state) {
+        switch (state) {
+            case 'UPLOADING':
+                return (React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 512 512" },
+                    React.createElement("path", { d: "M412.6 227.1L278.6 89c-5.8-6-13.7-9-22.4-9h-.4c-8.7 0-16.6 3-22.4 9l-134 138.1c-12.5 12-12.5 31.3 0 43.2 12.5 11.9 32.7 11.9 45.2 0l79.4-83v214c0 16.9 14.3 30.6 32 30.6 18 0 32-13.7 32-30.6v-214l79.4 83c12.5 11.9 32.7 11.9 45.2 0s12.5-31.2 0-43.2z" })));
+            default:
+                return (React.createElement("svg", null,
+                    React.createElement("path", { d: "M17.1739993,7.70416151 C19.4161161,5.52059528 23.0822691,5.52059528 25.3243331,7.70410998 C27.7184735,10.0341339 27.4282212,13.5644568 25.3243597,15.6098095 L15.6287879,25.048979 L14.6758693,24.1216236 L14.8354747,23.9669607 L24.3842707,14.7139495 C25.9787245,13.241131 26.215502,10.4556717 24.3800429,8.59166733 C22.6755457,6.92968323 19.8228395,6.92968323 18.1182195,8.591787 L7.28700007,19.1360817 C5.99581012,20.3932153 5.99581012,22.3963603 7.28700007,23.6090772 C8.58142055,24.8693561 10.6481765,24.8693561 11.8975833,23.6086611 L21.1690052,14.63163 C21.9542576,13.8660587 21.9542576,12.5770803 21.1690052,11.8115091 C20.3806892,11.0429512 19.0476,11.0429512 18.2591652,11.8116248 L10.0744157,19.7789766 L9.12191043,18.8520235 L9.28071807,18.6973492 L17.3103469,10.8767105 C18.6319247,9.58632427 20.787555,9.58632427 22.1091328,10.8767105 C23.4335913,12.1699093 23.4335913,14.2732298 22.1089295,15.5666269 L12.8414124,24.5916211 C10.820263,26.5607117 7.91585521,26.1828043 6.30219937,24.5949593 C4.59286478,23.0027813 4.5113578,19.9590317 6.34441985,18.2468596 L17.1739993,7.70416151 Z", id: "Shape" })));
+        }
+    };
     ShellContainer.prototype.render = function () {
         var _this = this;
         var className = Chat_1.classList('wc-console', this.props.inputText.length > 0 && 'has-text', this.props.showUploadButton && 'has-upload-button');
@@ -13797,9 +13827,7 @@ var ShellContainer = (function (_super) {
         var placeholder = this.props.listeningState === Store_1.ListeningState.STARTED ? this.props.strings.listeningIndicator : this.props.strings.consolePlaceholder;
         return (React.createElement("div", { className: className },
             this.props.showUploadButton &&
-                React.createElement("label", { className: "wc-upload", htmlFor: "wc-upload-input", onKeyPress: function (evt) { return _this.handleUploadButtonKeyPress(evt); }, tabIndex: 0 },
-                    React.createElement("svg", null,
-                        React.createElement("path", { d: "M17.1739993,7.70416151 C19.4161161,5.52059528 23.0822691,5.52059528 25.3243331,7.70410998 C27.7184735,10.0341339 27.4282212,13.5644568 25.3243597,15.6098095 L15.6287879,25.048979 L14.6758693,24.1216236 L14.8354747,23.9669607 L24.3842707,14.7139495 C25.9787245,13.241131 26.215502,10.4556717 24.3800429,8.59166733 C22.6755457,6.92968323 19.8228395,6.92968323 18.1182195,8.591787 L7.28700007,19.1360817 C5.99581012,20.3932153 5.99581012,22.3963603 7.28700007,23.6090772 C8.58142055,24.8693561 10.6481765,24.8693561 11.8975833,23.6086611 L21.1690052,14.63163 C21.9542576,13.8660587 21.9542576,12.5770803 21.1690052,11.8115091 C20.3806892,11.0429512 19.0476,11.0429512 18.2591652,11.8116248 L10.0744157,19.7789766 L9.12191043,18.8520235 L9.28071807,18.6973492 L17.3103469,10.8767105 C18.6319247,9.58632427 20.787555,9.58632427 22.1091328,10.8767105 C23.4335913,12.1699093 23.4335913,14.2732298 22.1089295,15.5666269 L12.8414124,24.5916211 C10.820263,26.5607117 7.91585521,26.1828043 6.30219937,24.5949593 C4.59286478,23.0027813 4.5113578,19.9590317 6.34441985,18.2468596 L17.1739993,7.70416151 Z", id: "Shape" }))),
+                React.createElement("label", { className: "wc-upload", htmlFor: "wc-upload-input", onKeyPress: function (evt) { return _this.handleUploadButtonKeyPress(evt); }, tabIndex: 0 }, this.fileIcon('DEFAULT')),
             this.props.showUploadButton &&
                 React.createElement("input", { id: "wc-upload-input", tabIndex: -1, type: "file", ref: function (input) { return _this.fileInput = input; }, multiple: true, onChange: function () { return _this.onChangeFile(); }, "aria-label": this.props.strings.uploadFile, role: "button" }),
             React.createElement("div", { className: "wc-textbox" },
@@ -13823,7 +13851,9 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     // only used to create helper functions below
     locale: state.format.locale,
     user: state.connection.user,
-    listeningState: state.shell.listeningState
+    listeningState: state.shell.listeningState,
+    // ASK PRO
+    upload: state.upload.uploadState
 }); }, {
     // passed down to ShellContainer
     onChangeText: function (input) { return ({ type: 'Update_Input', input: input, source: "text" }); },
@@ -13839,6 +13869,7 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     showUploadButton: stateProps.showUploadButton,
     strings: stateProps.strings,
     listeningState: stateProps.listeningState,
+    upload: stateProps.upload,
     // from dispatchProps
     onChangeText: dispatchProps.onChangeText,
     // helper functions
