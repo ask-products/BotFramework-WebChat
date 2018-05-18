@@ -166,9 +166,11 @@ export const shell: Reducer<ShellState> = (
 ///////////////////////////////
 // ASKPRO - Upload Ui
 
-export const setUploadState = (newState: string) => {
-    this.store.dispatch({ type: 'Set_Upload_State', newState: newState });
-}
+export const setUploadState = (newState: string) => ({
+    type: 'Set_Upload_State',
+    newState: newState
+} as UploadActions );
+
 export interface UploadState {
     uploadState: string
 }

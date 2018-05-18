@@ -25,6 +25,7 @@ interface Props {
     sendMessage: (inputText: string) => void,
     sendFiles: (files: FileList) => void,
     apSendFiles: (attachment: any) => void,
+    setUploadState: (state: any) => void,
     stopListening: () => void,
     startListening: () => void
 }
@@ -73,12 +74,12 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
         // apUriFromFiles(this.fileInput.files)
         // this.props.uploadingState('UPLOADING');
         let calls = apUriFromFiles(this.fileInput.files);
-        setUploadState('UPLOADING');
+        this.props.setUploadState('UPLOADING');
         for(let call of calls){
             const attachment = [call];
             call.then((value: any) => {
                 this.props.apSendFiles([value]);
-                setUploadState('DEFAULT');
+                this.props.setUploadState('DEFAULT');
                 this.fileInput.value = null;
                 this.textInput.focus();
             })
@@ -170,7 +171,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                             {/* <svg>
                                 <path d="M17.1739993,7.70416151 C19.4161161,5.52059528 23.0822691,5.52059528 25.3243331,7.70410998 C27.7184735,10.0341339 27.4282212,13.5644568 25.3243597,15.6098095 L15.6287879,25.048979 L14.6758693,24.1216236 L14.8354747,23.9669607 L24.3842707,14.7139495 C25.9787245,13.241131 26.215502,10.4556717 24.3800429,8.59166733 C22.6755457,6.92968323 19.8228395,6.92968323 18.1182195,8.591787 L7.28700007,19.1360817 C5.99581012,20.3932153 5.99581012,22.3963603 7.28700007,23.6090772 C8.58142055,24.8693561 10.6481765,24.8693561 11.8975833,23.6086611 L21.1690052,14.63163 C21.9542576,13.8660587 21.9542576,12.5770803 21.1690052,11.8115091 C20.3806892,11.0429512 19.0476,11.0429512 18.2591652,11.8116248 L10.0744157,19.7789766 L9.12191043,18.8520235 L9.28071807,18.6973492 L17.3103469,10.8767105 C18.6319247,9.58632427 20.787555,9.58632427 22.1091328,10.8767105 C23.4335913,12.1699093 23.4335913,14.2732298 22.1089295,15.5666269 L12.8414124,24.5916211 C10.820263,26.5607117 7.91585521,26.1828043 6.30219937,24.5949593 C4.59286478,23.0027813 4.5113578,19.9590317 6.34441985,18.2468596 L17.1739993,7.70416151 Z" id="Shape"></path>
                             </svg> */}
-                            {this.fileIcon('DEFAULT')}
+                            {this.fileIcon(this.props.upload)}
                         </label>
                 }
                 {
@@ -256,7 +257,8 @@ export const Shell = connect(
         // only used to create helper functions below
         sendMessage,
         sendFiles,
-        apSendFiles
+        apSendFiles,
+        setUploadState
     }, (stateProps: any, dispatchProps: any, ownProps: any): Props => ({
         // from stateProps
         inputText: stateProps.inputText,
@@ -270,6 +272,7 @@ export const Shell = connect(
         sendMessage: (text: string) => dispatchProps.sendMessage(text, stateProps.user, stateProps.locale),
         sendFiles: (files: FileList) => dispatchProps.sendFiles(files, stateProps.user, stateProps.locale),
         apSendFiles: (attachment: any) => dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale),
+        setUploadState: (state: any) => dispatchProps.setUploadState(state),
         startListening: () => dispatchProps.startListening(),
         stopListening: () => dispatchProps.stopListening()
     }), {

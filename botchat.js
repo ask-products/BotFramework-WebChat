@@ -2980,9 +2980,10 @@ exports.shell = function (state, action) {
 };
 ///////////////////////////////
 // ASKPRO - Upload Ui
-exports.setUploadState = function (newState) {
-    _this.store.dispatch({ type: 'Set_Upload_State', newState: newState });
-};
+exports.setUploadState = function (newState) { return ({
+    type: 'Set_Upload_State',
+    newState: newState
+}); };
 exports.upload = function (state, action) {
     if (state === void 0) { state = {
         uploadState: 'DEFAULT'
@@ -13767,13 +13768,13 @@ var ShellContainer = (function (_super) {
         // apUriFromFiles(this.fileInput.files)
         // this.props.uploadingState('UPLOADING');
         var calls = file_upload_1.apUriFromFiles(this.fileInput.files);
-        Store_1.setUploadState('UPLOADING');
+        this.props.setUploadState('UPLOADING');
         for (var _i = 0, calls_1 = calls; _i < calls_1.length; _i++) {
             var call = calls_1[_i];
             var attachment = [call];
             call.then(function (value) {
                 _this.props.apSendFiles([value]);
-                Store_1.setUploadState('DEFAULT');
+                _this.props.setUploadState('DEFAULT');
                 _this.fileInput.value = null;
                 _this.textInput.focus();
             })
@@ -13827,7 +13828,7 @@ var ShellContainer = (function (_super) {
         var placeholder = this.props.listeningState === Store_1.ListeningState.STARTED ? this.props.strings.listeningIndicator : this.props.strings.consolePlaceholder;
         return (React.createElement("div", { className: className },
             this.props.showUploadButton &&
-                React.createElement("label", { className: "wc-upload", htmlFor: "wc-upload-input", onKeyPress: function (evt) { return _this.handleUploadButtonKeyPress(evt); }, tabIndex: 0 }, this.fileIcon('DEFAULT')),
+                React.createElement("label", { className: "wc-upload", htmlFor: "wc-upload-input", onKeyPress: function (evt) { return _this.handleUploadButtonKeyPress(evt); }, tabIndex: 0 }, this.fileIcon(this.props.upload)),
             this.props.showUploadButton &&
                 React.createElement("input", { id: "wc-upload-input", tabIndex: -1, type: "file", ref: function (input) { return _this.fileInput = input; }, multiple: true, onChange: function () { return _this.onChangeFile(); }, "aria-label": this.props.strings.uploadFile, role: "button" }),
             React.createElement("div", { className: "wc-textbox" },
@@ -13862,7 +13863,8 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     // only used to create helper functions below
     sendMessage: Store_1.sendMessage,
     sendFiles: Store_1.sendFiles,
-    apSendFiles: Store_1.apSendFiles
+    apSendFiles: Store_1.apSendFiles,
+    setUploadState: Store_1.setUploadState
 }, function (stateProps, dispatchProps, ownProps) { return ({
     // from stateProps
     inputText: stateProps.inputText,
@@ -13876,6 +13878,7 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     sendMessage: function (text) { return dispatchProps.sendMessage(text, stateProps.user, stateProps.locale); },
     sendFiles: function (files) { return dispatchProps.sendFiles(files, stateProps.user, stateProps.locale); },
     apSendFiles: function (attachment) { return dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale); },
+    setUploadState: function (state) { return dispatchProps.setUploadState(state); },
     startListening: function () { return dispatchProps.startListening(); },
     stopListening: function () { return dispatchProps.stopListening(); }
 }); }, {

@@ -90,9 +90,10 @@ exports.shell = function (state, action) {
 };
 ///////////////////////////////
 // ASKPRO - Upload Ui
-exports.setUploadState = function (newState) {
-    _this.store.dispatch({ type: 'Set_Upload_State', newState: newState });
-};
+exports.setUploadState = function (newState) { return ({
+    type: 'Set_Upload_State',
+    newState: newState
+}); };
 exports.upload = function (state, action) {
     if (state === void 0) { state = {
         uploadState: 'DEFAULT'

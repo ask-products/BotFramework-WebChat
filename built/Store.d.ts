@@ -48,7 +48,7 @@ export declare type ShellAction = {
     autoListenAfterSpeak: boolean;
 };
 export declare const shell: Reducer<ShellState>;
-export declare const setUploadState: (newState: string) => void;
+export declare const setUploadState: (newState: string) => UploadActions;
 export interface UploadState {
     uploadState: string;
 }
