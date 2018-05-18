@@ -1,6 +1,2 @@
-declare const apUriFromFiles: (files: any) => Promise<{
-    contentUrl: string;
-    contentType: any;
-    name: any;
-}[]>;
+declare const apUriFromFiles: (files: any) => any;
 export { apUriFromFiles };

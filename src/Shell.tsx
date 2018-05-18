@@ -69,13 +69,26 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
 
     private onChangeFile() {
         // do we make the file calls here? 
-        apUriFromFiles(this.fileInput.files)
-        .then((attachment) => {
-            // console.log('file change', attachment);
-            this.props.apSendFiles(attachment);
-            this.fileInput.value = null;
-            this.textInput.focus();
-        });
+        // apUriFromFiles(this.fileInput.files)
+        let calls = apUriFromFiles(this.fileInput.files);
+        for(let call of calls){
+            const attachment = [call];
+            call.then((value: any) => {
+                this.props.apSendFiles([value]);
+                this.fileInput.value = null;
+                this.textInput.focus();
+            })
+            .catch((err: any) => {
+                console.log(err);
+            });
+        }
+        // Promise.all(calls)
+        // .then((values) => { 
+        //     this.props.apSendFiles(values);
+        //     this.fileInput.value = null;
+        //     this.textInput.focus();
+        // })
+        // .catch((err) => {console.log(err);});
     }
 
     private onTextInputFocus(){
