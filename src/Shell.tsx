@@ -5,7 +5,13 @@ import { classList } from './Chat';
 import { Dispatch, connect } from 'react-redux';
 import { Strings } from './Strings';
 import { Speech } from './SpeechModule'
-import { ChatActions, ListeningState, sendMessage, sendFiles } from './Store';
+import { ChatActions, ListeningState, sendMessage, sendFiles, apSendFiles } from './Store';
+
+
+// ASKPRO
+import { apUriFromFiles } from './ask_pro/file_upload';
+import { AttachmentView } from './Attachment';
+// END ASKPRO
 
 interface Props {
     inputText: string,
@@ -17,6 +23,7 @@ interface Props {
 
     sendMessage: (inputText: string) => void,
     sendFiles: (files: FileList) => void,
+    apSendFiles: (attachment: any) => void,
     stopListening: () => void,
     startListening: () => void
 }
@@ -61,9 +68,27 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
     }
 
     private onChangeFile() {
-        this.props.sendFiles(this.fileInput.files);
-        this.fileInput.value = null;
-        this.textInput.focus();
+        // do we make the file calls here? 
+        // apUriFromFiles(this.fileInput.files)
+        let calls = apUriFromFiles(this.fileInput.files);
+        for(let call of calls){
+            const attachment = [call];
+            call.then((value: any) => {
+                this.props.apSendFiles([value]);
+                this.fileInput.value = null;
+                this.textInput.focus();
+            })
+            .catch((err: any) => {
+                console.log(err);
+            });
+        }
+        // Promise.all(calls)
+        // .then((values) => { 
+        //     this.props.apSendFiles(values);
+        //     this.fileInput.value = null;
+        //     this.textInput.focus();
+        // })
+        // .catch((err) => {console.log(err);});
     }
 
     private onTextInputFocus(){
@@ -209,7 +234,8 @@ export const Shell = connect(
         startListening:  () => ({ type: 'Listening_Starting' }),
         // only used to create helper functions below
         sendMessage,
-        sendFiles
+        sendFiles,
+        apSendFiles
     }, (stateProps: any, dispatchProps: any, ownProps: any): Props => ({
         // from stateProps
         inputText: stateProps.inputText,
@@ -221,6 +247,7 @@ export const Shell = connect(
         // helper functions
         sendMessage: (text: string) => dispatchProps.sendMessage(text, stateProps.user, stateProps.locale),
         sendFiles: (files: FileList) => dispatchProps.sendFiles(files, stateProps.user, stateProps.locale),
+        apSendFiles: (attachment: any) => dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale),
         startListening: () => dispatchProps.startListening(),
         stopListening: () => dispatchProps.stopListening()
     }), {

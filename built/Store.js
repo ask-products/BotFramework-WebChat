@@ -34,6 +34,19 @@ exports.sendFiles = function (files, from, locale) { return ({
         locale: locale
     }
 }); };
+///////////////////////////
+// ASKPRO - Upload handler
+exports.apSendFiles = function (attachment, from, locale) { return ({
+    type: 'Send_Message',
+    activity: {
+        type: "message",
+        attachments: attachment,
+        from: from,
+        locale: locale
+    }
+}); };
+// END ASKPRO - Upload handler
+///////////////////////////////
 var attachmentsFromFiles = function (files) {
     var attachments = [];
     for (var i = 0, numFiles = files.length; i < numFiles; i++) {
@@ -44,6 +57,7 @@ var attachmentsFromFiles = function (files) {
             name: file.name
         });
     }
+    console.log(attachments);
     return attachments;
 };
 exports.shell = function (state, action) {

@@ -6,6 +6,8 @@ var Chat_1 = require("./Chat");
 var react_redux_1 = require("react-redux");
 var SpeechModule_1 = require("./SpeechModule");
 var Store_1 = require("./Store");
+// ASKPRO
+var file_upload_1 = require("./ask_pro/file_upload");
 var ShellContainer = (function (_super) {
     tslib_1.__extends(ShellContainer, _super);
     function ShellContainer() {
@@ -38,9 +40,29 @@ var ShellContainer = (function (_super) {
         this.sendMessage();
     };
     ShellContainer.prototype.onChangeFile = function () {
-        this.props.sendFiles(this.fileInput.files);
-        this.fileInput.value = null;
-        this.textInput.focus();
+        var _this = this;
+        // do we make the file calls here? 
+        // apUriFromFiles(this.fileInput.files)
+        var calls = file_upload_1.apUriFromFiles(this.fileInput.files);
+        for (var _i = 0, calls_1 = calls; _i < calls_1.length; _i++) {
+            var call = calls_1[_i];
+            var attachment = [call];
+            call.then(function (value) {
+                _this.props.apSendFiles([value]);
+                _this.fileInput.value = null;
+                _this.textInput.focus();
+            })
+                .catch(function (err) {
+                console.log(err);
+            });
+        }
+        // Promise.all(calls)
+        // .then((values) => { 
+        //     this.props.apSendFiles(values);
+        //     this.fileInput.value = null;
+        //     this.textInput.focus();
+        // })
+        // .catch((err) => {console.log(err);});
     };
     ShellContainer.prototype.onTextInputFocus = function () {
         if (this.props.listeningState === Store_1.ListeningState.STARTED) {
@@ -104,7 +126,8 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     startListening: function () { return ({ type: 'Listening_Starting' }); },
     // only used to create helper functions below
     sendMessage: Store_1.sendMessage,
-    sendFiles: Store_1.sendFiles
+    sendFiles: Store_1.sendFiles,
+    apSendFiles: Store_1.apSendFiles
 }, function (stateProps, dispatchProps, ownProps) { return ({
     // from stateProps
     inputText: stateProps.inputText,
@@ -116,6 +139,7 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     // helper functions
     sendMessage: function (text) { return dispatchProps.sendMessage(text, stateProps.user, stateProps.locale); },
     sendFiles: function (files) { return dispatchProps.sendFiles(files, stateProps.user, stateProps.locale); },
+    apSendFiles: function (attachment) { return dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale); },
     startListening: function () { return dispatchProps.startListening(); },
     stopListening: function () { return dispatchProps.stopListening(); }
 }); }, {

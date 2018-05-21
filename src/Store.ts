@@ -5,7 +5,6 @@ import { Speech } from './SpeechModule';
 import { ActivityOrID } from './Types';
 import { HostConfig } from 'adaptivecards';
 import * as konsole from './Konsole';
-
 // Reducers - perform state transformations
 
 import { Reducer } from 'redux';
@@ -37,6 +36,19 @@ export const sendFiles = (files: FileList, from: User, locale: string) => ({
         locale
     }} as ChatActions);
 
+///////////////////////////
+// ASKPRO - Upload handler
+export const apSendFiles = (attachment: any, from: User, locale: string) => ({
+        type: 'Send_Message',
+        activity: {
+            type: "message",
+            attachments: attachment,
+            from,
+            locale
+        }} as ChatActions);
+// END ASKPRO - Upload handler
+///////////////////////////////
+
 const attachmentsFromFiles = (files: FileList) => {
     const attachments: Media[] = [];
     for (let i = 0, numFiles = files.length; i < numFiles; i++) {
@@ -47,6 +59,7 @@ const attachmentsFromFiles = (files: FileList) => {
             name: file.name
         });
     }
+    console.log(attachments);
     return attachments;
 }
 
@@ -705,6 +718,7 @@ const sendTypingEpic: Epic<ChatActions, ChatState> = (action$, store) =>
 
 import { Store, createStore as reduxCreateStore, combineReducers } from 'redux';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
+import { resolve } from 'path';
 
 export const createStore = () =>
     reduxCreateStore(
