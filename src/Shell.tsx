@@ -5,7 +5,7 @@ import { classList } from './Chat';
 import { Dispatch, connect } from 'react-redux';
 import { Strings } from './Strings';
 import { Speech } from './SpeechModule'
-import { ChatActions, ListeningState, sendMessage, sendFiles, apSendFiles } from './Store';
+import { ChatActions, ListeningState, sendMessage, sendFiles, apSendFiles, setUploadState } from './Store';
 
 
 // ASKPRO
@@ -18,12 +18,14 @@ interface Props {
     strings: Strings,
     listeningState: ListeningState,
     showUploadButton: boolean
+    upload: any
 
     onChangeText: (inputText: string) => void
 
     sendMessage: (inputText: string) => void,
     sendFiles: (files: FileList) => void,
     apSendFiles: (attachment: any) => void,
+    setUploadState: (state: any) => void,
     stopListening: () => void,
     startListening: () => void
 }
@@ -70,11 +72,14 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
     private onChangeFile() {
         // do we make the file calls here? 
         // apUriFromFiles(this.fileInput.files)
+        // this.props.uploadingState('UPLOADING');
         let calls = apUriFromFiles(this.fileInput.files);
+        this.props.setUploadState('UPLOADING');
         for(let call of calls){
             const attachment = [call];
             call.then((value: any) => {
                 this.props.apSendFiles([value]);
+                this.props.setUploadState('DEFAULT');
                 this.fileInput.value = null;
                 this.textInput.focus();
             })
@@ -112,7 +117,21 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
             this.props.onChangeText(this.props.inputText + appendKey);
         }
     }
-
+    private fileIcon(state: string){
+        switch(state){
+            case 'UPLOADING':
+            return (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                        <path d="M412.6 227.1L278.6 89c-5.8-6-13.7-9-22.4-9h-.4c-8.7 0-16.6 3-22.4 9l-134 138.1c-12.5 12-12.5 31.3 0 43.2 12.5 11.9 32.7 11.9 45.2 0l79.4-83v214c0 16.9 14.3 30.6 32 30.6 18 0 32-13.7 32-30.6v-214l79.4 83c12.5 11.9 32.7 11.9 45.2 0s12.5-31.2 0-43.2z"/>
+                    </svg>
+                );
+            default:
+                return(
+                    <svg>
+                        <path d="M17.1739993,7.70416151 C19.4161161,5.52059528 23.0822691,5.52059528 25.3243331,7.70410998 C27.7184735,10.0341339 27.4282212,13.5644568 25.3243597,15.6098095 L15.6287879,25.048979 L14.6758693,24.1216236 L14.8354747,23.9669607 L24.3842707,14.7139495 C25.9787245,13.241131 26.215502,10.4556717 24.3800429,8.59166733 C22.6755457,6.92968323 19.8228395,6.92968323 18.1182195,8.591787 L7.28700007,19.1360817 C5.99581012,20.3932153 5.99581012,22.3963603 7.28700007,23.6090772 C8.58142055,24.8693561 10.6481765,24.8693561 11.8975833,23.6086611 L21.1690052,14.63163 C21.9542576,13.8660587 21.9542576,12.5770803 21.1690052,11.8115091 C20.3806892,11.0429512 19.0476,11.0429512 18.2591652,11.8116248 L10.0744157,19.7789766 L9.12191043,18.8520235 L9.28071807,18.6973492 L17.3103469,10.8767105 C18.6319247,9.58632427 20.787555,9.58632427 22.1091328,10.8767105 C23.4335913,12.1699093 23.4335913,14.2732298 22.1089295,15.5666269 L12.8414124,24.5916211 C10.820263,26.5607117 7.91585521,26.1828043 6.30219937,24.5949593 C4.59286478,23.0027813 4.5113578,19.9590317 6.34441985,18.2468596 L17.1739993,7.70416151 Z" id="Shape"></path>
+                    </svg>
+                );
+        }
+    }
     render() {
         const className = classList(
             'wc-console',
@@ -149,9 +168,10 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                             {/* <svg>
                                 <path d="M19.96 4.79m-2 0a2 2 0 0 1 4 0 2 2 0 0 1-4 0zM8.32 4.19L2.5 15.53 22.45 15.53 17.46 8.56 14.42 11.18 8.32 4.19ZM1.04 1L1.04 17 24.96 17 24.96 1 1.04 1ZM1.03 0L24.96 0C25.54 0 26 0.45 26 0.99L26 17.01C26 17.55 25.53 18 24.96 18L1.03 18C0.46 18 0 17.55 0 17.01L0 0.99C0 0.45 0.47 0 1.03 0Z" />
                             </svg> */}
-                            <svg>
+                            {/* <svg>
                                 <path d="M17.1739993,7.70416151 C19.4161161,5.52059528 23.0822691,5.52059528 25.3243331,7.70410998 C27.7184735,10.0341339 27.4282212,13.5644568 25.3243597,15.6098095 L15.6287879,25.048979 L14.6758693,24.1216236 L14.8354747,23.9669607 L24.3842707,14.7139495 C25.9787245,13.241131 26.215502,10.4556717 24.3800429,8.59166733 C22.6755457,6.92968323 19.8228395,6.92968323 18.1182195,8.591787 L7.28700007,19.1360817 C5.99581012,20.3932153 5.99581012,22.3963603 7.28700007,23.6090772 C8.58142055,24.8693561 10.6481765,24.8693561 11.8975833,23.6086611 L21.1690052,14.63163 C21.9542576,13.8660587 21.9542576,12.5770803 21.1690052,11.8115091 C20.3806892,11.0429512 19.0476,11.0429512 18.2591652,11.8116248 L10.0744157,19.7789766 L9.12191043,18.8520235 L9.28071807,18.6973492 L17.3103469,10.8767105 C18.6319247,9.58632427 20.787555,9.58632427 22.1091328,10.8767105 C23.4335913,12.1699093 23.4335913,14.2732298 22.1089295,15.5666269 L12.8414124,24.5916211 C10.820263,26.5607117 7.91585521,26.1828043 6.30219937,24.5949593 C4.59286478,23.0027813 4.5113578,19.9590317 6.34441985,18.2468596 L17.1739993,7.70416151 Z" id="Shape"></path>
-                            </svg>
+                            </svg> */}
+                            {this.fileIcon(this.props.upload)}
                         </label>
                 }
                 {
@@ -226,7 +246,9 @@ export const Shell = connect(
         // only used to create helper functions below
         locale: state.format.locale,
         user: state.connection.user,
-        listeningState: state.shell.listeningState
+        listeningState: state.shell.listeningState,
+        // ASK PRO
+        upload: state.upload.uploadState
     }), {
         // passed down to ShellContainer
         onChangeText: (input: string) => ({ type: 'Update_Input', input, source: "text" } as ChatActions),
@@ -235,19 +257,22 @@ export const Shell = connect(
         // only used to create helper functions below
         sendMessage,
         sendFiles,
-        apSendFiles
+        apSendFiles,
+        setUploadState
     }, (stateProps: any, dispatchProps: any, ownProps: any): Props => ({
         // from stateProps
         inputText: stateProps.inputText,
         showUploadButton: stateProps.showUploadButton,
         strings: stateProps.strings,
         listeningState: stateProps.listeningState,
+        upload: stateProps.upload,
         // from dispatchProps
         onChangeText: dispatchProps.onChangeText,
         // helper functions
         sendMessage: (text: string) => dispatchProps.sendMessage(text, stateProps.user, stateProps.locale),
         sendFiles: (files: FileList) => dispatchProps.sendFiles(files, stateProps.user, stateProps.locale),
         apSendFiles: (attachment: any) => dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale),
+        setUploadState: (state: any) => dispatchProps.setUploadState(state),
         startListening: () => dispatchProps.startListening(),
         stopListening: () => dispatchProps.stopListening()
     }), {

@@ -46,6 +46,7 @@ export const apSendFiles = (attachment: any, from: User, locale: string) => ({
             from,
             locale
         }} as ChatActions);
+
 // END ASKPRO - Upload handler
 ///////////////////////////////
 
@@ -162,7 +163,39 @@ export const shell: Reducer<ShellState> = (
             return state;
     }
 }
+///////////////////////////////
+// ASKPRO - Upload Ui
 
+export const setUploadState = (newState: string) => ({
+    type: 'Set_Upload_State',
+    newState: newState
+} as UploadActions );
+
+export interface UploadState {
+    uploadState: string
+}
+export type UploadActions = {
+    type:'Set_Upload_State',
+    newState: string
+}
+export const upload: Reducer<UploadState> = (
+    state: UploadState = {
+        uploadState: 'DEFAULT'
+    },
+    action: UploadActions
+) => {
+    switch (action.type){
+        case 'Set_Upload_State':
+        return {
+            ...state,
+            uploadState: action.newState
+        };
+    default:
+        return state;
+    }
+}
+// END ASKPRO - Upload Ui
+///////////////////////////////
 export interface FormatState {
     chatTitle: boolean | string,
     locale: string,
@@ -497,7 +530,7 @@ export const adaptiveCards: Reducer<AdaptiveCardsState> = (
 }
 
 
-export type ChatActions = ShellAction | FormatAction | SizeAction | ConnectionAction | HistoryAction | AdaptiveCardsAction;
+export type ChatActions = ShellAction | FormatAction | SizeAction | ConnectionAction | HistoryAction | AdaptiveCardsAction | UploadActions;
 
 const nullAction = { type: null } as ChatActions;
 
@@ -507,7 +540,8 @@ export interface ChatState {
     format: FormatState,
     history: HistoryState,
     shell: ShellState,
-    size: SizeState
+    size: SizeState,
+    upload: UploadState
 }
 
 const speakFromMsg = (msg: Message, fallbackLocale: string) => {
@@ -728,7 +762,8 @@ export const createStore = () =>
             format,
             history,
             shell,
-            size
+            size,
+            upload
         }),
         applyMiddleware(createEpicMiddleware(combineEpics(
             updateSelectedActivityEpic,
