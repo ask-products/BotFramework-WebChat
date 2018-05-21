@@ -43,8 +43,8 @@ export class AdaptiveCardBuilder {
         }
     }
 
-    addButtons(cardActions: CardAction[]) {
-        if (cardActions) {
+    addButtons(cardActions: CardAction[], interactive: Boolean = true) {
+        if (interactive && cardActions) {
             cardActions.forEach(cardAction => {
                 this.card.addAction(AdaptiveCardBuilder.addCardAction(cardAction));
             });
@@ -71,11 +71,12 @@ export class AdaptiveCardBuilder {
         }
     }
 
-    addCommon(content: ICommonContent, interactive: Boolean = true ) {
+    addCommon(content: ICommonContent, interactive: Boolean) {
         this.addTextBlock(content.title, { size: TextSize.Medium, weight: TextWeight.Bolder });
         this.addTextBlock(content.subtitle, { isSubtle: true, wrap: true });
         this.addTextBlock(content.text, { wrap: true });
-        this.addButtons(content.buttons);
+        // ASK PRO - Is this post still interactive?
+        this.addButtons(content.buttons, interactive);
     }
 
     addImage(url: string, container?: Container, selectAction?: CardAction) {
@@ -102,10 +103,10 @@ export interface ICommonContent {
     buttons?: CardAction[]
 }
 
-export const buildCommonCard = (content: ICommonContent): AdaptiveCard => {
+export const buildCommonCard = (content: ICommonContent, interactive: Boolean): AdaptiveCard => {
     if (!content) return null;
 
     const cardBuilder = new AdaptiveCardBuilder();
-    cardBuilder.addCommon(content)
+    cardBuilder.addCommon(content, interactive)
     return cardBuilder.card;
 };

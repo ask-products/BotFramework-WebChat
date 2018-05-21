@@ -32,13 +32,17 @@ export interface BotFrameworkCardAction extends CardAction {
 
 const defaultHostConfig = new HostConfig(adaptivecardsHostConfig);
 
-function cardWithoutHttpActions(card: IAdaptiveCard) {
+function cardWithoutHttpActions(card: IAdaptiveCard, interactive: Boolean) {
+    if(!interactive){
+        card.actions = [];
+    }
     if (!card.actions) {
         return card;
     }
 
     const nextActions: (IOpenUrlAction | IShowCardAction | ISubmitAction)[] = card.actions.reduce((nextActions, action) => {
         // Filter out HTTP action buttons
+        // console.log(action);
         switch (action.type) {
             case 'Action.Submit':
                 break;
@@ -46,7 +50,7 @@ function cardWithoutHttpActions(card: IAdaptiveCard) {
             case 'Action.ShowCard':
                 nextActions.push({
                     ...action,
-                    card: cardWithoutHttpActions(action.card)
+                    card: cardWithoutHttpActions(action.card, interactive)
                 });
 
                 break;
@@ -125,6 +129,7 @@ class AdaptiveCardContainer extends React.Component<Props, State> {
             prevProps.hostConfig !== this.props.hostConfig
             || prevProps.jsonCard !== this.props.jsonCard
             || prevProps.nativeCard !== this.props.nativeCard
+            || prevProps.interactive !== this.props.interactive
         ) {
             this.unmountAdaptiveCards();
             this.mountAdaptiveCards();
@@ -150,7 +155,7 @@ class AdaptiveCardContainer extends React.Component<Props, State> {
 
         if (!this.props.nativeCard && this.props.jsonCard) {
             this.props.jsonCard.version = this.props.jsonCard.version || '0.5';
-            adaptiveCard.parse(cardWithoutHttpActions(this.props.jsonCard));
+            adaptiveCard.parse(cardWithoutHttpActions(this.props.jsonCard, this.props.interactive));
             errors = adaptiveCard.validate();
         }
 

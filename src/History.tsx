@@ -154,7 +154,6 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                                 onImageLoad={ () => this.autoscroll() }
                                 interactive={index === this.props.activities.length-1}
                             />
-                            {console.log(index,  index === this.props.activities.length-1, activity.id)}
                         </WrappedActivity>
                 );
             }

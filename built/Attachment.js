@@ -113,7 +113,9 @@ exports.AttachmentView = function (props) {
     };
     switch (attachment.contentType) {
         case "application/vnd.microsoft.card.hero":
-            if (!props.interactive)
+            console.log(attachment);
+            // ASK PRO - is the hero card only containing buttons?
+            if (!props.interactive && attachment.content.buttons)
                 return null;
             if (!attachment.content)
                 return null;
@@ -121,7 +123,7 @@ exports.AttachmentView = function (props) {
             if (attachment.content.images) {
                 attachment.content.images.forEach(function (img) { return heroCardBuilder_1.addImage(img.url, null, img.tap); });
             }
-            heroCardBuilder_1.addCommon(attachment.content);
+            heroCardBuilder_1.addCommon(attachment.content, props.interactive);
             return (React.createElement(AdaptiveCardContainer_1.default, { className: "hero", nativeCard: heroCardBuilder_1.card, onImageLoad: props.onImageLoad, onCardAction: props.onCardAction, onClick: onCardAction(attachment.content.tap) }));
         case "application/vnd.microsoft.card.thumbnail":
             if (!attachment.content)
@@ -136,25 +138,25 @@ exports.AttachmentView = function (props) {
                 thumbnailCardBuilder.addButtons(attachment.content.buttons);
             }
             else {
-                thumbnailCardBuilder.addCommon(attachment.content);
+                thumbnailCardBuilder.addCommon(attachment.content, props.interactive);
             }
             return (React.createElement(AdaptiveCardContainer_1.default, { className: "thumbnail", nativeCard: thumbnailCardBuilder.card, onImageLoad: props.onImageLoad, onCardAction: props.onCardAction, onClick: onCardAction(attachment.content.tap) }));
         case "application/vnd.microsoft.card.video":
             if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { className: "video", nativeCard: CardBuilder.buildCommonCard(attachment.content), onCardAction: props.onCardAction }, getRichCardContentMedia('video', attachment.content)));
+            return (React.createElement(AdaptiveCardContainer_1.default, { className: "video", nativeCard: CardBuilder.buildCommonCard(attachment.content, props.interactive), onCardAction: props.onCardAction }, getRichCardContentMedia('video', attachment.content)));
         case "application/vnd.microsoft.card.animation":
             if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { className: "animation", nativeCard: CardBuilder.buildCommonCard(attachment.content), onCardAction: props.onCardAction }, getRichCardContentMedia(mediaType, attachment.content)));
+            return (React.createElement(AdaptiveCardContainer_1.default, { className: "animation", nativeCard: CardBuilder.buildCommonCard(attachment.content, props.interactive), onCardAction: props.onCardAction }, getRichCardContentMedia(mediaType, attachment.content)));
         case "application/vnd.microsoft.card.audio":
             if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { className: "audio", nativeCard: CardBuilder.buildCommonCard(attachment.content), onCardAction: props.onCardAction }, getRichCardContentMedia('audio', attachment.content)));
+            return (React.createElement(AdaptiveCardContainer_1.default, { className: "audio", nativeCard: CardBuilder.buildCommonCard(attachment.content, props.interactive), onCardAction: props.onCardAction }, getRichCardContentMedia('audio', attachment.content)));
         case "application/vnd.microsoft.card.signin":
             if (!attachment.content)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { className: "signin", nativeCard: CardBuilder.buildCommonCard(attachment.content), onCardAction: props.onCardAction }));
+            return (React.createElement(AdaptiveCardContainer_1.default, { className: "signin", nativeCard: CardBuilder.buildCommonCard(attachment.content, props.interactive), onCardAction: props.onCardAction }));
         case "application/vnd.microsoft.card.receipt":
             if (!attachment.content)
                 return null;
@@ -200,12 +202,12 @@ exports.AttachmentView = function (props) {
         case "application/vnd.microsoft.card.adaptive":
             if (!attachment.content)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { jsonCard: attachment.content, onImageLoad: props.onImageLoad, onCardAction: props.onCardAction }));
+            return (React.createElement(AdaptiveCardContainer_1.default, { interactive: props.interactive, jsonCard: attachment.content, onImageLoad: props.onImageLoad, onCardAction: props.onCardAction }));
         // Deprecated format for Skype channels. For testing legacy bots in Emulator only.
         case "application/vnd.microsoft.card.flex":
             if (!attachment.content)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { className: "flex", nativeCard: CardBuilder.buildCommonCard(attachment.content), onCardAction: props.onCardAction }, attachedImage(attachment.content.images)));
+            return (React.createElement(AdaptiveCardContainer_1.default, { className: "flex", nativeCard: CardBuilder.buildCommonCard(attachment.content, props.interactive), onCardAction: props.onCardAction }, attachedImage(attachment.content.images)));
         case "image/svg+xml":
         case "image/png":
         case "image/jpg":

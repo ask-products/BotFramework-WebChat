@@ -4567,7 +4567,9 @@ exports.AttachmentView = function (props) {
     };
     switch (attachment.contentType) {
         case "application/vnd.microsoft.card.hero":
-            if (!props.interactive)
+            console.log(attachment);
+            // ASK PRO - is the hero card only containing buttons?
+            if (!props.interactive && attachment.content.buttons)
                 return null;
             if (!attachment.content)
                 return null;
@@ -4575,7 +4577,7 @@ exports.AttachmentView = function (props) {
             if (attachment.content.images) {
                 attachment.content.images.forEach(function (img) { return heroCardBuilder_1.addImage(img.url, null, img.tap); });
             }
-            heroCardBuilder_1.addCommon(attachment.content);
+            heroCardBuilder_1.addCommon(attachment.content, props.interactive);
             return (React.createElement(AdaptiveCardContainer_1.default, { className: "hero", nativeCard: heroCardBuilder_1.card, onImageLoad: props.onImageLoad, onCardAction: props.onCardAction, onClick: onCardAction(attachment.content.tap) }));
         case "application/vnd.microsoft.card.thumbnail":
             if (!attachment.content)
@@ -4590,25 +4592,25 @@ exports.AttachmentView = function (props) {
                 thumbnailCardBuilder.addButtons(attachment.content.buttons);
             }
             else {
-                thumbnailCardBuilder.addCommon(attachment.content);
+                thumbnailCardBuilder.addCommon(attachment.content, props.interactive);
             }
             return (React.createElement(AdaptiveCardContainer_1.default, { className: "thumbnail", nativeCard: thumbnailCardBuilder.card, onImageLoad: props.onImageLoad, onCardAction: props.onCardAction, onClick: onCardAction(attachment.content.tap) }));
         case "application/vnd.microsoft.card.video":
             if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { className: "video", nativeCard: CardBuilder.buildCommonCard(attachment.content), onCardAction: props.onCardAction }, getRichCardContentMedia('video', attachment.content)));
+            return (React.createElement(AdaptiveCardContainer_1.default, { className: "video", nativeCard: CardBuilder.buildCommonCard(attachment.content, props.interactive), onCardAction: props.onCardAction }, getRichCardContentMedia('video', attachment.content)));
         case "application/vnd.microsoft.card.animation":
             if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { className: "animation", nativeCard: CardBuilder.buildCommonCard(attachment.content), onCardAction: props.onCardAction }, getRichCardContentMedia(mediaType, attachment.content)));
+            return (React.createElement(AdaptiveCardContainer_1.default, { className: "animation", nativeCard: CardBuilder.buildCommonCard(attachment.content, props.interactive), onCardAction: props.onCardAction }, getRichCardContentMedia(mediaType, attachment.content)));
         case "application/vnd.microsoft.card.audio":
             if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { className: "audio", nativeCard: CardBuilder.buildCommonCard(attachment.content), onCardAction: props.onCardAction }, getRichCardContentMedia('audio', attachment.content)));
+            return (React.createElement(AdaptiveCardContainer_1.default, { className: "audio", nativeCard: CardBuilder.buildCommonCard(attachment.content, props.interactive), onCardAction: props.onCardAction }, getRichCardContentMedia('audio', attachment.content)));
         case "application/vnd.microsoft.card.signin":
             if (!attachment.content)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { className: "signin", nativeCard: CardBuilder.buildCommonCard(attachment.content), onCardAction: props.onCardAction }));
+            return (React.createElement(AdaptiveCardContainer_1.default, { className: "signin", nativeCard: CardBuilder.buildCommonCard(attachment.content, props.interactive), onCardAction: props.onCardAction }));
         case "application/vnd.microsoft.card.receipt":
             if (!attachment.content)
                 return null;
@@ -4654,12 +4656,12 @@ exports.AttachmentView = function (props) {
         case "application/vnd.microsoft.card.adaptive":
             if (!attachment.content)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { jsonCard: attachment.content, onImageLoad: props.onImageLoad, onCardAction: props.onCardAction }));
+            return (React.createElement(AdaptiveCardContainer_1.default, { interactive: props.interactive, jsonCard: attachment.content, onImageLoad: props.onImageLoad, onCardAction: props.onCardAction }));
         // Deprecated format for Skype channels. For testing legacy bots in Emulator only.
         case "application/vnd.microsoft.card.flex":
             if (!attachment.content)
                 return null;
-            return (React.createElement(AdaptiveCardContainer_1.default, { className: "flex", nativeCard: CardBuilder.buildCommonCard(attachment.content), onCardAction: props.onCardAction }, attachedImage(attachment.content.images)));
+            return (React.createElement(AdaptiveCardContainer_1.default, { className: "flex", nativeCard: CardBuilder.buildCommonCard(attachment.content, props.interactive), onCardAction: props.onCardAction }, attachedImage(attachment.content.images)));
         case "image/svg+xml":
         case "image/png":
         case "image/jpg":
@@ -14888,17 +14890,21 @@ var adaptivecards_1 = __webpack_require__(28);
 var Chat_1 = __webpack_require__(11);
 var adaptivecardsHostConfig = __webpack_require__(127);
 var defaultHostConfig = new adaptivecards_1.HostConfig(adaptivecardsHostConfig);
-function cardWithoutHttpActions(card) {
+function cardWithoutHttpActions(card, interactive) {
+    if (!interactive) {
+        card.actions = [];
+    }
     if (!card.actions) {
         return card;
     }
     var nextActions = card.actions.reduce(function (nextActions, action) {
         // Filter out HTTP action buttons
+        // console.log(action);
         switch (action.type) {
             case 'Action.Submit':
                 break;
             case 'Action.ShowCard':
-                nextActions.push(tslib_1.__assign({}, action, { card: cardWithoutHttpActions(action.card) }));
+                nextActions.push(tslib_1.__assign({}, action, { card: cardWithoutHttpActions(action.card, interactive) }));
                 break;
             default:
                 nextActions.push(action);
@@ -14961,7 +14967,8 @@ var AdaptiveCardContainer = (function (_super) {
     AdaptiveCardContainer.prototype.componentDidUpdate = function (prevProps) {
         if (prevProps.hostConfig !== this.props.hostConfig
             || prevProps.jsonCard !== this.props.jsonCard
-            || prevProps.nativeCard !== this.props.nativeCard) {
+            || prevProps.nativeCard !== this.props.nativeCard
+            || prevProps.interactive !== this.props.interactive) {
             this.unmountAdaptiveCards();
             this.mountAdaptiveCards();
         }
@@ -14980,7 +14987,7 @@ var AdaptiveCardContainer = (function (_super) {
         var errors = [];
         if (!this.props.nativeCard && this.props.jsonCard) {
             this.props.jsonCard.version = this.props.jsonCard.version || '0.5';
-            adaptiveCard.parse(cardWithoutHttpActions(this.props.jsonCard));
+            adaptiveCard.parse(cardWithoutHttpActions(this.props.jsonCard, this.props.interactive));
             errors = adaptiveCard.validate();
         }
         adaptiveCard.onExecuteAction = function (action) { return _this.onExecuteAction(action); };
@@ -15109,9 +15116,10 @@ var AdaptiveCardBuilder = (function () {
             container.addItem(textblock);
         }
     };
-    AdaptiveCardBuilder.prototype.addButtons = function (cardActions) {
+    AdaptiveCardBuilder.prototype.addButtons = function (cardActions, interactive) {
         var _this = this;
-        if (cardActions) {
+        if (interactive === void 0) { interactive = true; }
+        if (interactive && cardActions) {
             cardActions.forEach(function (cardAction) {
                 _this.card.addAction(AdaptiveCardBuilder.addCardAction(cardAction));
             });
@@ -15134,11 +15142,11 @@ var AdaptiveCardBuilder = (function () {
         }
     };
     AdaptiveCardBuilder.prototype.addCommon = function (content, interactive) {
-        if (interactive === void 0) { interactive = true; }
         this.addTextBlock(content.title, { size: adaptivecards_1.TextSize.Medium, weight: adaptivecards_1.TextWeight.Bolder });
         this.addTextBlock(content.subtitle, { isSubtle: true, wrap: true });
         this.addTextBlock(content.text, { wrap: true });
-        this.addButtons(content.buttons);
+        // ASK PRO - Is this post still interactive?
+        this.addButtons(content.buttons, interactive);
     };
     AdaptiveCardBuilder.prototype.addImage = function (url, container, selectAction) {
         container = container || this.container;
@@ -15153,11 +15161,11 @@ var AdaptiveCardBuilder = (function () {
     return AdaptiveCardBuilder;
 }());
 exports.AdaptiveCardBuilder = AdaptiveCardBuilder;
-exports.buildCommonCard = function (content) {
+exports.buildCommonCard = function (content, interactive) {
     if (!content)
         return null;
     var cardBuilder = new AdaptiveCardBuilder();
-    cardBuilder.addCommon(content);
+    cardBuilder.addCommon(content, interactive);
     return cardBuilder.card;
 };
 
@@ -15385,8 +15393,7 @@ var HistoryView = (function (_super) {
                                 e.stopPropagation();
                                 _this.props.onClickRetry(activity);
                             } },
-                            React.createElement(ActivityView_1.ActivityView, { format: _this.props.format, size: _this.props.size, activity: activity, onCardAction: function (type, value) { return _this.doCardAction(type, value); }, onImageLoad: function () { return _this.autoscroll(); }, interactive: index === _this.props.activities.length - 1 }),
-                            console.log(index, index === _this.props.activities.length - 1, activity.id));
+                            React.createElement(ActivityView_1.ActivityView, { format: _this.props.format, size: _this.props.size, activity: activity, onCardAction: function (type, value) { return _this.doCardAction(type, value); }, onImageLoad: function () { return _this.autoscroll(); }, interactive: index === _this.props.activities.length - 1 }));
                 });
             }
         }

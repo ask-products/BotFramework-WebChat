@@ -9,17 +9,21 @@ var adaptivecards_1 = require("adaptivecards");
 var Chat_1 = require("./Chat");
 var adaptivecardsHostConfig = require("../adaptivecards-hostconfig.json");
 var defaultHostConfig = new adaptivecards_1.HostConfig(adaptivecardsHostConfig);
-function cardWithoutHttpActions(card) {
+function cardWithoutHttpActions(card, interactive) {
+    if (!interactive) {
+        card.actions = [];
+    }
     if (!card.actions) {
         return card;
     }
     var nextActions = card.actions.reduce(function (nextActions, action) {
         // Filter out HTTP action buttons
+        // console.log(action);
         switch (action.type) {
             case 'Action.Submit':
                 break;
             case 'Action.ShowCard':
-                nextActions.push(tslib_1.__assign({}, action, { card: cardWithoutHttpActions(action.card) }));
+                nextActions.push(tslib_1.__assign({}, action, { card: cardWithoutHttpActions(action.card, interactive) }));
                 break;
             default:
                 nextActions.push(action);
@@ -82,7 +86,8 @@ var AdaptiveCardContainer = (function (_super) {
     AdaptiveCardContainer.prototype.componentDidUpdate = function (prevProps) {
         if (prevProps.hostConfig !== this.props.hostConfig
             || prevProps.jsonCard !== this.props.jsonCard
-            || prevProps.nativeCard !== this.props.nativeCard) {
+            || prevProps.nativeCard !== this.props.nativeCard
+            || prevProps.interactive !== this.props.interactive) {
             this.unmountAdaptiveCards();
             this.mountAdaptiveCards();
         }
@@ -101,7 +106,7 @@ var AdaptiveCardContainer = (function (_super) {
         var errors = [];
         if (!this.props.nativeCard && this.props.jsonCard) {
             this.props.jsonCard.version = this.props.jsonCard.version || '0.5';
-            adaptiveCard.parse(cardWithoutHttpActions(this.props.jsonCard));
+            adaptiveCard.parse(cardWithoutHttpActions(this.props.jsonCard, this.props.interactive));
             errors = adaptiveCard.validate();
         }
         adaptiveCard.onExecuteAction = function (action) { return _this.onExecuteAction(action); };
