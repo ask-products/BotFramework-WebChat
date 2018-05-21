@@ -48,7 +48,7 @@ var CarouselAttachments = (function (_super) {
         var _a = this.props, attachments = _a.attachments, props = tslib_1.__rest(_a, ["attachments"]);
         return (React.createElement("ul", null, this.props.attachments.map(function (attachment, index) {
             return React.createElement("li", { key: index, className: "wc-carousel-item" },
-                React.createElement(Attachment_1.AttachmentView, { attachment: attachment, format: props.format, onCardAction: props.onCardAction, onImageLoad: props.onImageLoad }));
+                React.createElement(Attachment_1.AttachmentView, { attachment: attachment, format: props.format, onCardAction: props.onCardAction, onImageLoad: props.onImageLoad, interactive: props.interactive }));
         })));
     };
     return CarouselAttachments;

@@ -13,7 +13,7 @@ var Attachments = function (props) {
         React.createElement(Carousel_1.Carousel, tslib_1.__assign({ attachments: attachments }, otherProps))
         :
             React.createElement("div", { className: "wc-list" }, attachments.map(function (attachment, index) {
-                return React.createElement(Attachment_1.AttachmentView, { key: index, attachment: attachment, format: props.format, onCardAction: props.onCardAction, onImageLoad: props.onImageLoad });
+                return React.createElement(Attachment_1.AttachmentView, { key: index, attachment: attachment, format: props.format, onCardAction: props.onCardAction, onImageLoad: props.onImageLoad, interactive: props.interactive });
             }));
 };
 var ActivityView = (function (_super) {
@@ -27,7 +27,8 @@ var ActivityView = (function (_super) {
             || this.props.format !== nextProps.format
             || (this.props.activity.type === 'message'
                 && this.props.activity.attachmentLayout === 'carousel'
-                && this.props.size !== nextProps.size);
+                && this.props.size !== nextProps.size)
+            || this.props.interactive != nextProps.interactive;
     };
     ActivityView.prototype.render = function () {
         var _a = this.props, activity = _a.activity, props = tslib_1.__rest(_a, ["activity"]);
@@ -35,7 +36,7 @@ var ActivityView = (function (_super) {
             case 'message':
                 return (React.createElement("div", null,
                     React.createElement(FormattedText_1.FormattedText, { text: activity.text, format: activity.textFormat, onImageLoad: props.onImageLoad }),
-                    React.createElement(Attachments, { attachments: activity.attachments, attachmentLayout: activity.attachmentLayout, format: props.format, onCardAction: props.onCardAction, onImageLoad: props.onImageLoad, size: props.size })));
+                    React.createElement(Attachments, { attachments: activity.attachments, attachmentLayout: activity.attachmentLayout, format: props.format, onCardAction: props.onCardAction, onImageLoad: props.onImageLoad, size: props.size, interactive: props.interactive })));
             case 'typing':
                 return React.createElement("div", { className: "wc-typing" });
         }

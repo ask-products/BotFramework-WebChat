@@ -147,6 +147,7 @@ export const AttachmentView = (props: {
     attachment: Attachment,
     onCardAction: IDoCardAction,
     onImageLoad: () => void
+    interactive: Boolean
 }) => {
     if (!props.attachment) return;
     const attachment = props.attachment as KnownMedia;
@@ -196,13 +197,17 @@ export const AttachmentView = (props: {
     };
     switch (attachment.contentType) {
         case "application/vnd.microsoft.card.hero":
+            if( !props.interactive ) 
+                return null;
             if (!attachment.content)
                 return null;
             const heroCardBuilder = new CardBuilder.AdaptiveCardBuilder();
             if (attachment.content.images) {
                 attachment.content.images.forEach(img => heroCardBuilder.addImage(img.url, null, img.tap));
             }
+        
             heroCardBuilder.addCommon(attachment.content)
+            
             return (
                 <AdaptiveCardContainer className="hero" nativeCard={ heroCardBuilder.card } onImageLoad={ props.onImageLoad } onCardAction={ props.onCardAction } onClick={ onCardAction(attachment.content.tap) } />
             );

@@ -113,6 +113,8 @@ exports.AttachmentView = function (props) {
     };
     switch (attachment.contentType) {
         case "application/vnd.microsoft.card.hero":
+            if (!props.interactive)
+                return null;
             if (!attachment.content)
                 return null;
             var heroCardBuilder_1 = new CardBuilder.AdaptiveCardBuilder();

@@ -12,7 +12,9 @@ const Attachments = (props: {
     format: FormatState,
     size: SizeState,
     onCardAction: IDoCardAction,
-    onImageLoad: () => void
+    onImageLoad: () => void,
+    interactive: Boolean
+
 }) => {
     const { attachments, attachmentLayout, ... otherProps } = props;
     if (!attachments || attachments.length === 0)
@@ -31,6 +33,7 @@ const Attachments = (props: {
                     format={ props.format }
                     onCardAction={ props.onCardAction }
                     onImageLoad={ props.onImageLoad }
+                    interactive={ props.interactive }
                 />
             ) }
         </div>
@@ -41,7 +44,8 @@ export interface ActivityViewProps {
     size: SizeState,
     activity: Activity,
     onCardAction: IDoCardAction,
-    onImageLoad: () => void
+    onImageLoad: () => void,
+    interactive?: Boolean
 }
 
 export class ActivityView extends React.Component<ActivityViewProps, {}> {
@@ -57,7 +61,8 @@ export class ActivityView extends React.Component<ActivityViewProps, {}> {
         // if it's a carousel and the size changed, re-render
             || (this.props.activity.type === 'message'
                 && this.props.activity.attachmentLayout === 'carousel'
-                && this.props.size !== nextProps.size);
+                && this.props.size !== nextProps.size)
+            || this.props.interactive != nextProps.interactive;
     }
 
     render() {
@@ -78,6 +83,7 @@ export class ActivityView extends React.Component<ActivityViewProps, {}> {
                             onCardAction={ props.onCardAction }
                             onImageLoad={ props.onImageLoad }
                             size={ props.size }
+                            interactive={ props.interactive }
                         />
                     </div>
                 );

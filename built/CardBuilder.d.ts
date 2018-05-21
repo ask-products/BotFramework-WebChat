@@ -9,7 +9,7 @@ export declare class AdaptiveCardBuilder {
     addTextBlock(text: string, template: Partial<TextBlock>, container?: Container): void;
     addButtons(cardActions: CardAction[]): void;
     private static addCardAction(cardAction);
-    addCommon(content: ICommonContent): void;
+    addCommon(content: ICommonContent, interactive?: Boolean): void;
     addImage(url: string, container?: Container, selectAction?: CardAction): void;
 }
 export interface ICommonContent {

@@ -19,6 +19,7 @@ export interface Props {
     onCardAction: IDoCardAction,
     onClick?: (e: React.MouseEvent<HTMLElement>) => void,
     onImageLoad?: () => any,
+    interactive: Boolean
 }
 
 export interface State {

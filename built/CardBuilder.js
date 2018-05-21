@@ -59,7 +59,8 @@ var AdaptiveCardBuilder = (function () {
             return action;
         }
     };
-    AdaptiveCardBuilder.prototype.addCommon = function (content) {
+    AdaptiveCardBuilder.prototype.addCommon = function (content, interactive) {
+        if (interactive === void 0) { interactive = true; }
         this.addTextBlock(content.title, { size: adaptivecards_1.TextSize.Medium, weight: adaptivecards_1.TextWeight.Bolder });
         this.addTextBlock(content.subtitle, { isSubtle: true, wrap: true });
         this.addTextBlock(content.text, { wrap: true });

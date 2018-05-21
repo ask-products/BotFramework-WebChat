@@ -41,9 +41,6 @@ var ShellContainer = (function (_super) {
     };
     ShellContainer.prototype.onChangeFile = function () {
         var _this = this;
-        // do we make the file calls here? 
-        // apUriFromFiles(this.fileInput.files)
-        // this.props.uploadingState('UPLOADING');
         var calls = file_upload_1.apUriFromFiles(this.fileInput.files);
         this.props.setUploadState('UPLOADING');
         for (var _i = 0, calls_1 = calls; _i < calls_1.length; _i++) {
@@ -59,13 +56,6 @@ var ShellContainer = (function (_super) {
                 console.log(err);
             });
         }
-        // Promise.all(calls)
-        // .then((values) => { 
-        //     this.props.apSendFiles(values);
-        //     this.fileInput.value = null;
-        //     this.textInput.focus();
-        // })
-        // .catch((err) => {console.log(err);});
     };
     ShellContainer.prototype.onTextInputFocus = function () {
         if (this.props.listeningState === Store_1.ListeningState.STARTED) {

@@ -71,7 +71,7 @@ export class AdaptiveCardBuilder {
         }
     }
 
-    addCommon(content: ICommonContent) {
+    addCommon(content: ICommonContent, interactive: Boolean = true ) {
         this.addTextBlock(content.title, { size: TextSize.Medium, weight: TextWeight.Bolder });
         this.addTextBlock(content.subtitle, { isSubtle: true, wrap: true });
         this.addTextBlock(content.text, { wrap: true });

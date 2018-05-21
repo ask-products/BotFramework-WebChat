@@ -9,6 +9,7 @@ export interface ActivityViewProps {
     activity: Activity;
     onCardAction: IDoCardAction;
     onImageLoad: () => void;
+    interactive?: Boolean;
 }
 export declare class ActivityView extends React.Component<ActivityViewProps, {}> {
     constructor(props: ActivityViewProps);

@@ -90,7 +90,8 @@ var HistoryView = (function (_super) {
                                 e.stopPropagation();
                                 _this.props.onClickRetry(activity);
                             } },
-                            React.createElement(ActivityView_1.ActivityView, { format: _this.props.format, size: _this.props.size, activity: activity, onCardAction: function (type, value) { return _this.doCardAction(type, value); }, onImageLoad: function () { return _this.autoscroll(); } }));
+                            React.createElement(ActivityView_1.ActivityView, { format: _this.props.format, size: _this.props.size, activity: activity, onCardAction: function (type, value) { return _this.doCardAction(type, value); }, onImageLoad: function () { return _this.autoscroll(); }, interactive: index === _this.props.activities.length - 1 }),
+                            console.log(index, index === _this.props.activities.length - 1, activity.id));
                 });
             }
         }
