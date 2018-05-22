@@ -17,6 +17,7 @@ var ShellContainer = (function (_super) {
         if (this.props.inputText.trim().length > 0) {
             this.props.sendMessage(this.props.inputText);
         }
+        this.props.disableInput();
     };
     ShellContainer.prototype.handleSendButtonKeyPress = function (evt) {
         if (evt.key === 'Enter' || evt.key === ' ') {
@@ -95,11 +96,11 @@ var ShellContainer = (function (_super) {
         var placeholder = this.props.listeningState === Store_1.ListeningState.STARTED ? this.props.strings.listeningIndicator : this.props.strings.consolePlaceholder;
         return (React.createElement("div", { className: className },
             this.props.showUploadButton &&
-                React.createElement("label", { className: "wc-upload", htmlFor: "wc-upload-input", onKeyPress: function (evt) { return _this.handleUploadButtonKeyPress(evt); }, tabIndex: 0 }, this.fileIcon(this.props.upload)),
+                React.createElement("label", { className: "wc-upload", htmlFor: "wc-upload-input", onKeyPress: function (evt) { return _this.handleUploadButtonKeyPress(evt); }, tabIndex: 0 }, this.fileIcon(this.props.apUi.uploadState)),
             this.props.showUploadButton &&
                 React.createElement("input", { id: "wc-upload-input", tabIndex: -1, type: "file", ref: function (input) { return _this.fileInput = input; }, multiple: true, onChange: function () { return _this.onChangeFile(); }, "aria-label": this.props.strings.uploadFile, role: "button" }),
             React.createElement("div", { className: "wc-textbox" },
-                React.createElement("input", { type: "text", className: "wc-shellinput", ref: function (input) { return _this.textInput = input; }, autoFocus: true, value: this.props.inputText, onChange: function (_) { return _this.props.onChangeText(_this.textInput.value); }, onKeyPress: function (e) { return _this.onKeyPress(e); }, onFocus: function () { return _this.onTextInputFocus(); }, placeholder: placeholder, "aria-label": this.props.inputText ? null : placeholder, "aria-live": "polite" })),
+                React.createElement("input", { type: "text", className: "wc-shellinput", ref: function (input) { return _this.textInput = input; }, autoFocus: true, value: this.props.inputText, onChange: function (_) { return _this.props.onChangeText(_this.textInput.value); }, onKeyPress: function (e) { return _this.onKeyPress(e); }, onFocus: function () { return _this.onTextInputFocus(); }, placeholder: placeholder, "aria-label": this.props.inputText ? null : placeholder, "aria-live": "polite", readOnly: !this.props.apUi.inputState })),
             React.createElement("button", { className: sendButtonClassName, onClick: function () { return _this.onClickSend(); }, "aria-label": this.props.strings.send, role: "button", onKeyPress: function (evt) { return _this.handleSendButtonKeyPress(evt); }, tabIndex: 0, type: "button" },
                 React.createElement("svg", null,
                     React.createElement("polygon", { id: "Combined-Shape", points: "5.01141071 6 5 14.1666484 22.1428571 16.5 5 18.8333516 5.01141071 27 29 16.5" }))),
@@ -121,12 +122,14 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     user: state.connection.user,
     listeningState: state.shell.listeningState,
     // ASK PRO
-    upload: state.upload.uploadState
+    apUi: state.apUi
 }); }, {
     // passed down to ShellContainer
     onChangeText: function (input) { return ({ type: 'Update_Input', input: input, source: "text" }); },
     stopListening: function () { return ({ type: 'Listening_Stopping' }); },
     startListening: function () { return ({ type: 'Listening_Starting' }); },
+    disableInput: function () { return ({ type: 'Set_Input_State', newState: false }); },
+    enableInput: function () { return ({ type: 'Set_Input_State', newState: true }); },
     // only used to create helper functions below
     sendMessage: Store_1.sendMessage,
     sendFiles: Store_1.sendFiles,
@@ -138,16 +141,19 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     showUploadButton: stateProps.showUploadButton,
     strings: stateProps.strings,
     listeningState: stateProps.listeningState,
-    upload: stateProps.upload,
+    apUi: stateProps.apUi,
     // from dispatchProps
     onChangeText: dispatchProps.onChangeText,
     // helper functions
     sendMessage: function (text) { return dispatchProps.sendMessage(text, stateProps.user, stateProps.locale); },
     sendFiles: function (files) { return dispatchProps.sendFiles(files, stateProps.user, stateProps.locale); },
-    apSendFiles: function (attachment) { return dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale); },
     setUploadState: function (state) { return dispatchProps.setUploadState(state); },
     startListening: function () { return dispatchProps.startListening(); },
-    stopListening: function () { return dispatchProps.stopListening(); }
+    stopListening: function () { return dispatchProps.stopListening(); },
+    // ASK PRO
+    apSendFiles: function (attachment) { return dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale); },
+    disableInput: function () { return dispatchProps.disableInput(); },
+    enableInput: function () { return dispatchProps.disableInput(); }
 }); }, {
     withRef: true
 })(ShellContainer);

@@ -149,26 +149,37 @@ export class Chat extends React.Component<ChatProps, {}> {
         switch (activity.type) {
             case "message":
                 this.store.dispatch<ChatActions>({ type: activity.from.id === state.connection.user.id ? 'Receive_Sent_Message' : 'Receive_Message', activity });
-                break;
+                // ASK PRO - Do we enable the input box here?
+                // if message is from the bot.
+                if(activity.from.id !== this.props.user.id) {
+                    this.store.dispatch<ChatActions>({type:'Set_Input_State', newState: true});
+                    const historyDOM = ReactDom.findDOMNode(this.historyRef) as HTMLElement;
 
-            case "typing":
+                    if (historyDOM) {
+                        historyDOM.focus();
+                    }
+                }
+                break;
+                
+                case "typing":
                 if (activity.from.id !== state.connection.user.id)
-                    this.store.dispatch<ChatActions>({ type: 'Show_Typing', activity });
+                this.store.dispatch<ChatActions>({ type: 'Show_Typing', activity });
                 break;
+            }
         }
-    }
-
-    private setSize() {
-        this.store.dispatch<ChatActions>({
-            type: 'Set_Size',
-            width: this.chatviewPanelRef.offsetWidth,
-            height: this.chatviewPanelRef.offsetHeight
-        });
-    }
-
-    private handleCardAction() {
-        // After the user click on any card action, we will "blur" the focus, by setting focus on message pane
-        // This is for after click on card action, the user press "A", it should go into the chat box
+        
+        private setSize() {
+            this.store.dispatch<ChatActions>({
+                type: 'Set_Size',
+                width: this.chatviewPanelRef.offsetWidth,
+                height: this.chatviewPanelRef.offsetHeight
+            });
+        }
+        
+        private handleCardAction() {
+            // After the user click on any card action, we will "blur" the focus, by setting focus on message pane
+            // This is for after click on card action, the user press "A", it should go into the chat box
+        this.store.dispatch<ChatActions>({type:'Set_Input_State', newState: false});
         const historyDOM = ReactDom.findDOMNode(this.historyRef) as HTMLElement;
 
         if (historyDOM) {

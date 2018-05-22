@@ -73,6 +73,15 @@ var Chat = (function (_super) {
         switch (activity.type) {
             case "message":
                 this.store.dispatch({ type: activity.from.id === state.connection.user.id ? 'Receive_Sent_Message' : 'Receive_Message', activity: activity });
+                // ASK PRO - Do we enable the input box here?
+                // if message is from the bot.
+                if (activity.from.id !== this.props.user.id) {
+                    this.store.dispatch({ type: 'Set_Input_State', newState: true });
+                    var historyDOM = ReactDom.findDOMNode(this.historyRef);
+                    if (historyDOM) {
+                        historyDOM.focus();
+                    }
+                }
                 break;
             case "typing":
                 if (activity.from.id !== state.connection.user.id)
@@ -90,6 +99,7 @@ var Chat = (function (_super) {
     Chat.prototype.handleCardAction = function () {
         // After the user click on any card action, we will "blur" the focus, by setting focus on message pane
         // This is for after click on card action, the user press "A", it should go into the chat box
+        this.store.dispatch({ type: 'Set_Input_State', newState: false });
         var historyDOM = ReactDom.findDOMNode(this.historyRef);
         if (historyDOM) {
             historyDOM.focus();

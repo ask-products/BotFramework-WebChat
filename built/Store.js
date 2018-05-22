@@ -89,18 +89,21 @@ exports.shell = function (state, action) {
     }
 };
 ///////////////////////////////
-// ASKPRO - Upload Ui
+// ASKPRO -  Ui Control
 exports.setUploadState = function (newState) { return ({
     type: 'Set_Upload_State',
     newState: newState
 }); };
-exports.upload = function (state, action) {
+exports.apUi = function (state, action) {
     if (state === void 0) { state = {
-        uploadState: 'DEFAULT'
+        uploadState: 'DEFAULT',
+        inputState: true
     }; }
     switch (action.type) {
         case 'Set_Upload_State':
             return tslib_1.__assign({}, state, { uploadState: action.newState });
+        case 'Set_Input_State':
+            return tslib_1.__assign({}, state, { inputState: action.newState });
         default:
             return state;
     }
@@ -435,7 +438,7 @@ exports.createStore = function () {
         history: exports.history,
         shell: exports.shell,
         size: exports.size,
-        upload: exports.upload
+        apUi: exports.apUi
     }), redux_1.applyMiddleware(redux_observable_1.createEpicMiddleware(redux_observable_1.combineEpics(updateSelectedActivityEpic, sendMessageEpic, trySendMessageEpic, retrySendMessageEpic, showTypingEpic, sendTypingEpic, speakSSMLEpic, speakOnMessageReceivedEpic, startListeningEpic, stopListeningEpic, stopSpeakingEpic, listeningSilenceTimeoutEpic))));
 };
 //# sourceMappingURL=Store.js.map

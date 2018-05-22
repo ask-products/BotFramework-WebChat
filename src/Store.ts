@@ -164,25 +164,30 @@ export const shell: Reducer<ShellState> = (
     }
 }
 ///////////////////////////////
-// ASKPRO - Upload Ui
+// ASKPRO -  Ui Control
 
 export const setUploadState = (newState: string) => ({
     type: 'Set_Upload_State',
     newState: newState
-} as UploadActions );
+} as UiAction );
 
-export interface UploadState {
-    uploadState: string
+export interface UiState {
+    uploadState: string,
+    inputState: boolean
 }
-export type UploadActions = {
+export type UiAction = {
     type:'Set_Upload_State',
     newState: string
+} | {
+    type: 'Set_Input_State',
+    newState: boolean
 }
-export const upload: Reducer<UploadState> = (
-    state: UploadState = {
-        uploadState: 'DEFAULT'
+export const apUi: Reducer<UiState> = (
+    state: UiState = {
+        uploadState: 'DEFAULT',
+        inputState: true
     },
-    action: UploadActions
+    action: UiAction
 ) => {
     switch (action.type){
         case 'Set_Upload_State':
@@ -190,11 +195,16 @@ export const upload: Reducer<UploadState> = (
             ...state,
             uploadState: action.newState
         };
+        case 'Set_Input_State':
+        return {
+            ...state,
+            inputState: action.newState
+        }
     default:
         return state;
     }
 }
-// END ASKPRO - Upload Ui
+// END ASKPRO - Ui Control
 ///////////////////////////////
 export interface FormatState {
     chatTitle: boolean | string,
@@ -530,7 +540,7 @@ export const adaptiveCards: Reducer<AdaptiveCardsState> = (
 }
 
 
-export type ChatActions = ShellAction | FormatAction | SizeAction | ConnectionAction | HistoryAction | AdaptiveCardsAction | UploadActions;
+export type ChatActions = ShellAction | FormatAction | SizeAction | ConnectionAction | HistoryAction | AdaptiveCardsAction | UiAction;
 
 const nullAction = { type: null } as ChatActions;
 
@@ -541,7 +551,7 @@ export interface ChatState {
     history: HistoryState,
     shell: ShellState,
     size: SizeState,
-    upload: UploadState
+    apUi: UiState
 }
 
 const speakFromMsg = (msg: Message, fallbackLocale: string) => {
@@ -763,7 +773,7 @@ export const createStore = () =>
             history,
             shell,
             size,
-            upload
+            apUi
         }),
         applyMiddleware(createEpicMiddleware(combineEpics(
             updateSelectedActivityEpic,
