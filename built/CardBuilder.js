@@ -35,9 +35,10 @@ var AdaptiveCardBuilder = (function () {
             container.addItem(textblock);
         }
     };
-    AdaptiveCardBuilder.prototype.addButtons = function (cardActions) {
+    AdaptiveCardBuilder.prototype.addButtons = function (cardActions, interactive) {
         var _this = this;
-        if (cardActions) {
+        if (interactive === void 0) { interactive = true; }
+        if (interactive && cardActions) {
             cardActions.forEach(function (cardAction) {
                 _this.card.addAction(AdaptiveCardBuilder.addCardAction(cardAction));
             });
@@ -59,11 +60,12 @@ var AdaptiveCardBuilder = (function () {
             return action;
         }
     };
-    AdaptiveCardBuilder.prototype.addCommon = function (content) {
+    AdaptiveCardBuilder.prototype.addCommon = function (content, interactive) {
         this.addTextBlock(content.title, { size: adaptivecards_1.TextSize.Medium, weight: adaptivecards_1.TextWeight.Bolder });
         this.addTextBlock(content.subtitle, { isSubtle: true, wrap: true });
         this.addTextBlock(content.text, { wrap: true });
-        this.addButtons(content.buttons);
+        // ASK PRO - Is this post still interactive?
+        this.addButtons(content.buttons, interactive);
     };
     AdaptiveCardBuilder.prototype.addImage = function (url, container, selectAction) {
         container = container || this.container;
@@ -78,11 +80,11 @@ var AdaptiveCardBuilder = (function () {
     return AdaptiveCardBuilder;
 }());
 exports.AdaptiveCardBuilder = AdaptiveCardBuilder;
-exports.buildCommonCard = function (content) {
+exports.buildCommonCard = function (content, interactive) {
     if (!content)
         return null;
     var cardBuilder = new AdaptiveCardBuilder();
-    cardBuilder.addCommon(content);
+    cardBuilder.addCommon(content, interactive);
     return cardBuilder.card;
 };
 //# sourceMappingURL=CardBuilder.js.map

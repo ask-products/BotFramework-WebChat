@@ -9,6 +9,7 @@ export interface CarouselProps {
     attachments: Attachment[];
     onCardAction: IDoCardAction;
     onImageLoad: () => void;
+    interactive: Boolean;
 }
 export declare class Carousel extends React.PureComponent<CarouselProps, {}> {
     private root;
@@ -24,4 +25,5 @@ export interface CarouselAttachmentProps {
     attachments: Attachment[];
     onCardAction: IDoCardAction;
     onImageLoad: () => void;
+    interactive: Boolean;
 }

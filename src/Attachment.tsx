@@ -147,6 +147,7 @@ export const AttachmentView = (props: {
     attachment: Attachment,
     onCardAction: IDoCardAction,
     onImageLoad: () => void
+    interactive: Boolean
 }) => {
     if (!props.attachment) return;
     const attachment = props.attachment as KnownMedia;
@@ -196,13 +197,19 @@ export const AttachmentView = (props: {
     };
     switch (attachment.contentType) {
         case "application/vnd.microsoft.card.hero":
+        console.log(attachment);
+        // ASK PRO - is the hero card only containing buttons?
+            if( !props.interactive && attachment.content.buttons) 
+                return null;
             if (!attachment.content)
                 return null;
             const heroCardBuilder = new CardBuilder.AdaptiveCardBuilder();
             if (attachment.content.images) {
                 attachment.content.images.forEach(img => heroCardBuilder.addImage(img.url, null, img.tap));
             }
-            heroCardBuilder.addCommon(attachment.content)
+        
+            heroCardBuilder.addCommon(attachment.content, props.interactive)
+            
             return (
                 <AdaptiveCardContainer className="hero" nativeCard={ heroCardBuilder.card } onImageLoad={ props.onImageLoad } onCardAction={ props.onCardAction } onClick={ onCardAction(attachment.content.tap) } />
             );
@@ -219,7 +226,7 @@ export const AttachmentView = (props: {
                 thumbnailCardBuilder.addTextBlock(attachment.content.text, { wrap: true });
                 thumbnailCardBuilder.addButtons(attachment.content.buttons);
             } else {
-                thumbnailCardBuilder.addCommon(attachment.content);
+                thumbnailCardBuilder.addCommon(attachment.content, props.interactive);
             }
             return (
                 <AdaptiveCardContainer className="thumbnail" nativeCard={ thumbnailCardBuilder.card } onImageLoad={ props.onImageLoad } onCardAction={ props.onCardAction } onClick={ onCardAction(attachment.content.tap) } />
@@ -229,7 +236,7 @@ export const AttachmentView = (props: {
             if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
                 return null;
             return (
-                <AdaptiveCardContainer className="video" nativeCard={ CardBuilder.buildCommonCard(attachment.content) } onCardAction={ props.onCardAction } >
+                <AdaptiveCardContainer className="video" nativeCard={ CardBuilder.buildCommonCard(attachment.content, props.interactive) } onCardAction={ props.onCardAction } >
                     {getRichCardContentMedia('video', attachment.content)}
                 </AdaptiveCardContainer>
             );
@@ -238,7 +245,7 @@ export const AttachmentView = (props: {
             if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
                 return null;
             return (
-                <AdaptiveCardContainer className="animation" nativeCard={ CardBuilder.buildCommonCard(attachment.content) } onCardAction={ props.onCardAction } >
+                <AdaptiveCardContainer className="animation" nativeCard={ CardBuilder.buildCommonCard(attachment.content, props.interactive) } onCardAction={ props.onCardAction } >
                     {getRichCardContentMedia(mediaType, attachment.content)}
                 </AdaptiveCardContainer>
             );
@@ -247,7 +254,7 @@ export const AttachmentView = (props: {
             if (!attachment.content || !attachment.content.media || attachment.content.media.length === 0)
                 return null;
             return (
-                <AdaptiveCardContainer className="audio" nativeCard={CardBuilder.buildCommonCard(attachment.content)} onCardAction={props.onCardAction} >
+                <AdaptiveCardContainer className="audio" nativeCard={CardBuilder.buildCommonCard(attachment.content, props.interactive)} onCardAction={props.onCardAction} >
                     {getRichCardContentMedia('audio', attachment.content)}
                 </AdaptiveCardContainer>
             );
@@ -256,7 +263,7 @@ export const AttachmentView = (props: {
             if (!attachment.content)
                 return null;
             return (
-                <AdaptiveCardContainer className="signin" nativeCard={ CardBuilder.buildCommonCard(attachment.content) } onCardAction={ props.onCardAction } />
+                <AdaptiveCardContainer className="signin" nativeCard={ CardBuilder.buildCommonCard(attachment.content, props.interactive) } onCardAction={ props.onCardAction } />
             );
 
         case "application/vnd.microsoft.card.receipt":
@@ -307,7 +314,7 @@ export const AttachmentView = (props: {
             if (!attachment.content)
                 return null;
             return (
-                <AdaptiveCardContainer jsonCard={ attachment.content as IAdaptiveCard } onImageLoad={ props.onImageLoad } onCardAction={ props.onCardAction } />
+                <AdaptiveCardContainer interactive={props.interactive} jsonCard={ attachment.content as IAdaptiveCard } onImageLoad={ props.onImageLoad } onCardAction={ props.onCardAction } />
             );
 
         // Deprecated format for Skype channels. For testing legacy bots in Emulator only.
@@ -315,7 +322,7 @@ export const AttachmentView = (props: {
             if (!attachment.content)
                 return null;
             return (
-                <AdaptiveCardContainer className="flex" nativeCard={ CardBuilder.buildCommonCard(attachment.content) } onCardAction={ props.onCardAction } >
+                <AdaptiveCardContainer className="flex" nativeCard={ CardBuilder.buildCommonCard(attachment.content, props.interactive) } onCardAction={ props.onCardAction } >
                     { attachedImage(attachment.content.images) }
                 </AdaptiveCardContainer>
             );

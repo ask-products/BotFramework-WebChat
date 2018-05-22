@@ -7,9 +7,9 @@ export declare class AdaptiveCardBuilder {
     addColumnSet(sizes: number[], container?: Container): Column[];
     addItems(cardElements: CardElement[], container?: Container): void;
     addTextBlock(text: string, template: Partial<TextBlock>, container?: Container): void;
-    addButtons(cardActions: CardAction[]): void;
+    addButtons(cardActions: CardAction[], interactive?: Boolean): void;
     private static addCardAction(cardAction);
-    addCommon(content: ICommonContent): void;
+    addCommon(content: ICommonContent, interactive: Boolean): void;
     addImage(url: string, container?: Container, selectAction?: CardAction): void;
 }
 export interface ICommonContent {
@@ -18,4 +18,4 @@ export interface ICommonContent {
     text?: string;
     buttons?: CardAction[];
 }
-export declare const buildCommonCard: (content: ICommonContent) => AdaptiveCard;
+export declare const buildCommonCard: (content: ICommonContent, interactive: Boolean) => AdaptiveCard;

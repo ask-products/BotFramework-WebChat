@@ -11,4 +11,5 @@ export declare const AttachmentView: (props: {
     attachment: Attachment;
     onCardAction: IDoCardAction;
     onImageLoad: () => void;
+    interactive: Boolean;
 }) => JSX.Element;
