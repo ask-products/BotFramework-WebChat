@@ -5,7 +5,7 @@ import { classList } from './Chat';
 import { Dispatch, connect } from 'react-redux';
 import { Strings } from './Strings';
 import { Speech } from './SpeechModule'
-import { ChatActions, ListeningState, sendMessage, sendFiles, apSendFiles, setUploadState } from './Store';
+import { ChatActions, ListeningState, sendMessage, sendFiles, apSendFiles, UiState, setUploadState } from './Store';
 
 
 // ASKPRO
@@ -17,10 +17,14 @@ interface Props {
     inputText: string,
     strings: Strings,
     listeningState: ListeningState,
-    showUploadButton: boolean
-    upload: any
+    showUploadButton: boolean,
 
-    onChangeText: (inputText: string) => void
+    apUi: UiState,
+    disableInput: () => void,
+    enableInput: () => void,
+    
+
+    onChangeText: (inputText: string) => void,
 
     sendMessage: (inputText: string) => void,
     sendFiles: (files: FileList) => void,
@@ -40,10 +44,11 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
 
     private sendMessage() {
         if (this.props.inputText.trim().length > 0) {
+            this.props.disableInput();
             this.props.sendMessage(this.props.inputText);
         }
     }
-
+    
     private handleSendButtonKeyPress(evt: React.KeyboardEvent<HTMLButtonElement>) {
         if (evt.key === 'Enter' || evt.key === ' ') {
             evt.preventDefault();
@@ -51,26 +56,27 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
             this.textInput.focus();
         }
     }
-
+    
     private handleUploadButtonKeyPress(evt: React.KeyboardEvent<HTMLLabelElement>) {
         if (evt.key === 'Enter' || evt.key === ' ') {
             evt.preventDefault();
             this.fileInput.click();
         }
     }
-
+    
     private onKeyPress(e: React.KeyboardEvent<HTMLInputElement>) {
         if (e.key === 'Enter') {
             this.sendMessage();
         }
     }
-
+    
     private onClickSend() {
         this.sendMessage();
     }
-
+    
     private onChangeFile() {
         let calls = apUriFromFiles(this.fileInput.files);
+        this.props.disableInput();
         this.props.setUploadState('UPLOADING');
         for(let call of calls){
             const attachment = [call];
@@ -85,7 +91,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
             });
         }
     }
-
+    
     private onTextInputFocus(){
         if (this.props.listeningState === ListeningState.STARTED) {
             this.props.stopListening();
@@ -161,7 +167,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                             {/* <svg>
                                 <path d="M17.1739993,7.70416151 C19.4161161,5.52059528 23.0822691,5.52059528 25.3243331,7.70410998 C27.7184735,10.0341339 27.4282212,13.5644568 25.3243597,15.6098095 L15.6287879,25.048979 L14.6758693,24.1216236 L14.8354747,23.9669607 L24.3842707,14.7139495 C25.9787245,13.241131 26.215502,10.4556717 24.3800429,8.59166733 C22.6755457,6.92968323 19.8228395,6.92968323 18.1182195,8.591787 L7.28700007,19.1360817 C5.99581012,20.3932153 5.99581012,22.3963603 7.28700007,23.6090772 C8.58142055,24.8693561 10.6481765,24.8693561 11.8975833,23.6086611 L21.1690052,14.63163 C21.9542576,13.8660587 21.9542576,12.5770803 21.1690052,11.8115091 C20.3806892,11.0429512 19.0476,11.0429512 18.2591652,11.8116248 L10.0744157,19.7789766 L9.12191043,18.8520235 L9.28071807,18.6973492 L17.3103469,10.8767105 C18.6319247,9.58632427 20.787555,9.58632427 22.1091328,10.8767105 C23.4335913,12.1699093 23.4335913,14.2732298 22.1089295,15.5666269 L12.8414124,24.5916211 C10.820263,26.5607117 7.91585521,26.1828043 6.30219937,24.5949593 C4.59286478,23.0027813 4.5113578,19.9590317 6.34441985,18.2468596 L17.1739993,7.70416151 Z" id="Shape"></path>
                             </svg> */}
-                            {this.fileIcon(this.props.upload)}
+                            {this.fileIcon(this.props.apUi.uploadState)}
                         </label>
                 }
                 {
@@ -175,6 +181,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                             onChange={ () => this.onChangeFile() }
                             aria-label={ this.props.strings.uploadFile }
                             role="button"
+                            disabled= {!this.props.apUi.inputState}
                         />
                 }
                 <div className="wc-textbox">
@@ -190,6 +197,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                         placeholder={ placeholder }
                         aria-label={ this.props.inputText ? null : placeholder }
                         aria-live="polite"
+                        disabled= {!this.props.apUi.inputState}
                     />
                 </div>
                 <button
@@ -200,6 +208,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                     onKeyPress={ evt => this.handleSendButtonKeyPress(evt) }
                     tabIndex={ 0 }
                     type="button"
+                    disabled= {!this.props.apUi.inputState}
                 >
                     {/* <svg>
                         <path d="M26.79 9.38A0.31 0.31 0 0 0 26.79 8.79L0.41 0.02C0.36 0 0.34 0 0.32 0 0.14 0 0 0.13 0 0.29 0 0.33 0.01 0.37 0.03 0.41L3.44 9.08 0.03 17.76A0.29 0.29 0 0 0 0.01 17.8 0.28 0.28 0 0 0 0.01 17.86C0.01 18.02 0.14 18.16 0.3 18.16A0.3 0.3 0 0 0 0.41 18.14L26.79 9.38ZM0.81 0.79L24.84 8.79 3.98 8.79 0.81 0.79ZM3.98 9.37L24.84 9.37 0.81 17.37 3.98 9.37Z" />
@@ -215,6 +224,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                     role="button"
                     tabIndex={ 0 }
                     type="button"
+                    disabled= {!this.props.apUi.inputState}
                 >
                    <svg width="28" height="22" viewBox="0 0 58 58" >
                         <path d="M 44 28 C 43.448 28 43 28.447 43 29 L 43 35 C 43 42.72 36.72 49 29 49 C 21.28 49 15 42.72 15 35 L 15 29 C 15 28.447 14.552 28 14 28 C 13.448 28 13 28.447 13 29 L 13 35 C 13 43.485 19.644 50.429 28 50.949 L 28 56 L 23 56 C 22.448 56 22 56.447 22 57 C 22 57.553 22.448 58 23 58 L 35 58 C 35.552 58 36 57.553 36 57 C 36 56.447 35.552 56 35 56 L 30 56 L 30 50.949 C 38.356 50.429 45 43.484 45 35 L 45 29 C 45 28.447 44.552 28 44 28 Z"/>
@@ -238,12 +248,14 @@ export const Shell = connect(
         user: state.connection.user,
         listeningState: state.shell.listeningState,
         // ASK PRO
-        upload: state.upload.uploadState
+        apUi: state.apUi
     }), {
         // passed down to ShellContainer
         onChangeText: (input: string) => ({ type: 'Update_Input', input, source: "text" } as ChatActions),
         stopListening:  () => ({ type: 'Listening_Stopping' }),
         startListening:  () => ({ type: 'Listening_Starting' }),
+        disableInput:   () => ({ type: 'Set_Input_State', newState: false }),
+        enableInput:   () => ({ type: 'Set_Input_State', newState: true }),
         // only used to create helper functions below
         sendMessage,
         sendFiles,
@@ -255,16 +267,20 @@ export const Shell = connect(
         showUploadButton: stateProps.showUploadButton,
         strings: stateProps.strings,
         listeningState: stateProps.listeningState,
-        upload: stateProps.upload,
+        apUi: stateProps.apUi,
         // from dispatchProps
         onChangeText: dispatchProps.onChangeText,
         // helper functions
         sendMessage: (text: string) => dispatchProps.sendMessage(text, stateProps.user, stateProps.locale),
         sendFiles: (files: FileList) => dispatchProps.sendFiles(files, stateProps.user, stateProps.locale),
-        apSendFiles: (attachment: any) => dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale),
         setUploadState: (state: any) => dispatchProps.setUploadState(state),
         startListening: () => dispatchProps.startListening(),
-        stopListening: () => dispatchProps.stopListening()
+        stopListening: () => dispatchProps.stopListening(),
+        // ASK PRO
+        apSendFiles: (attachment: any) => dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale),
+        disableInput: () => dispatchProps.disableInput(),
+        enableInput: () => dispatchProps.disableInput()
+
     }), {
         withRef: true
     }
