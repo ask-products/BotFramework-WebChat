@@ -145,26 +145,23 @@ export class Chat extends React.Component<ChatProps, {}> {
     }
 
     private handleIncomingActivity(activity: Activity) {
+        console.log(activity);
         let state = this.store.getState();
         switch (activity.type) {
             case "message":
                 this.store.dispatch<ChatActions>({ type: activity.from.id === state.connection.user.id ? 'Receive_Sent_Message' : 'Receive_Message', activity });
-                // ASK PRO - Do we enable the input box here?
-                // if message is from the bot.
-                if(activity.from.id !== this.props.user.id) {
-                    this.store.dispatch<ChatActions>({type:'Set_Input_State', newState: true});
-                    const historyDOM = ReactDom.findDOMNode(this.historyRef) as HTMLElement;
-
-                    if (historyDOM) {
-                        historyDOM.focus();
-                    }
-                }
                 break;
-                
-                case "typing":
+            case "typing":
                 if (activity.from.id !== state.connection.user.id)
                 this.store.dispatch<ChatActions>({ type: 'Show_Typing', activity });
                 break;
+            case "event":
+                if(activity.name === 'DISABLE_INPUT') {
+                    this.store.dispatch<ChatActions>({type:'Set_Input_State', newState: false});
+                }
+                if(activity.name === 'ENABLE_INPUT') {
+                    this.store.dispatch<ChatActions>({type:'Set_Input_State', newState: true});
+                }
             }
         }
         
@@ -179,7 +176,7 @@ export class Chat extends React.Component<ChatProps, {}> {
         private handleCardAction() {
             // After the user click on any card action, we will "blur" the focus, by setting focus on message pane
             // This is for after click on card action, the user press "A", it should go into the chat box
-        this.store.dispatch<ChatActions>({type:'Set_Input_State', newState: false});
+        // this.store.dispatch<ChatActions>({type:'Set_Input_State', newState: false});
         const historyDOM = ReactDom.findDOMNode(this.historyRef) as HTMLElement;
 
         if (historyDOM) {

@@ -15,7 +15,7 @@ var ShellContainer = (function (_super) {
     }
     ShellContainer.prototype.sendMessage = function () {
         if (this.props.inputText.trim().length > 0) {
-            this.props.disableInput();
+            // this.props.disableInput();
             this.props.sendMessage(this.props.inputText);
         }
     };
@@ -85,7 +85,7 @@ var ShellContainer = (function (_super) {
                 .catch(function (err) {
                 _this.removePendingFiles(err.file);
                 _this.addErrorFiles(err.file);
-                // this.props.setUploadState('ERROR'); // this is disabled while we dicide on how to relay the fail info to the user.
+                // this.props.setUploadState('ERROR'); // this is disabled while we decide on how to relay the fail info to the user.
             });
         }
     };
@@ -204,7 +204,7 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     // ASK PRO
     apSendFiles: function (attachment) { return dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale); },
     disableInput: function () { return dispatchProps.disableInput(); },
-    enableInput: function () { return dispatchProps.disableInput(); }
+    enableInput: function () { return dispatchProps.enableInput(); }
 }); }, {
     withRef: true
 })(ShellContainer);

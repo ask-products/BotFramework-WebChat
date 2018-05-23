@@ -2184,24 +2184,23 @@ var Chat = (function (_super) {
         });
     };
     Chat.prototype.handleIncomingActivity = function (activity) {
+        console.log(activity);
         var state = this.store.getState();
         switch (activity.type) {
             case "message":
                 this.store.dispatch({ type: activity.from.id === state.connection.user.id ? 'Receive_Sent_Message' : 'Receive_Message', activity: activity });
-                // ASK PRO - Do we enable the input box here?
-                // if message is from the bot.
-                if (activity.from.id !== this.props.user.id) {
-                    this.store.dispatch({ type: 'Set_Input_State', newState: true });
-                    var historyDOM = ReactDom.findDOMNode(this.historyRef);
-                    if (historyDOM) {
-                        historyDOM.focus();
-                    }
-                }
                 break;
             case "typing":
                 if (activity.from.id !== state.connection.user.id)
                     this.store.dispatch({ type: 'Show_Typing', activity: activity });
                 break;
+            case "event":
+                if (activity.name === 'DISABLE_INPUT') {
+                    this.store.dispatch({ type: 'Set_Input_State', newState: false });
+                }
+                if (activity.name === 'ENABLE_INPUT') {
+                    this.store.dispatch({ type: 'Set_Input_State', newState: true });
+                }
         }
     };
     Chat.prototype.setSize = function () {
@@ -2214,7 +2213,7 @@ var Chat = (function (_super) {
     Chat.prototype.handleCardAction = function () {
         // After the user click on any card action, we will "blur" the focus, by setting focus on message pane
         // This is for after click on card action, the user press "A", it should go into the chat box
-        this.store.dispatch({ type: 'Set_Input_State', newState: false });
+        // this.store.dispatch<ChatActions>({type:'Set_Input_State', newState: false});
         var historyDOM = ReactDom.findDOMNode(this.historyRef);
         if (historyDOM) {
             historyDOM.focus();
@@ -21569,7 +21568,7 @@ var ShellContainer = (function (_super) {
     }
     ShellContainer.prototype.sendMessage = function () {
         if (this.props.inputText.trim().length > 0) {
-            this.props.disableInput();
+            // this.props.disableInput();
             this.props.sendMessage(this.props.inputText);
         }
     };
@@ -21639,7 +21638,7 @@ var ShellContainer = (function (_super) {
                 .catch(function (err) {
                 _this.removePendingFiles(err.file);
                 _this.addErrorFiles(err.file);
-                // this.props.setUploadState('ERROR'); // this is disabled while we dicide on how to relay the fail info to the user.
+                // this.props.setUploadState('ERROR'); // this is disabled while we decide on how to relay the fail info to the user.
             });
         }
     };
@@ -21758,7 +21757,7 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     // ASK PRO
     apSendFiles: function (attachment) { return dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale); },
     disableInput: function () { return dispatchProps.disableInput(); },
-    enableInput: function () { return dispatchProps.disableInput(); }
+    enableInput: function () { return dispatchProps.enableInput(); }
 }); }, {
     withRef: true
 })(ShellContainer);

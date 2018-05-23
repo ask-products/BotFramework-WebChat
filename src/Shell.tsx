@@ -46,7 +46,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
 
     private sendMessage() {
         if (this.props.inputText.trim().length > 0) {
-            this.props.disableInput();
+            // this.props.disableInput();
             this.props.sendMessage(this.props.inputText);
         }
     }
@@ -117,7 +117,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
             .catch((err: any) => {
                 this.removePendingFiles(err.file);
                 this.addErrorFiles(err.file);
-                // this.props.setUploadState('ERROR'); // this is disabled while we dicide on how to relay the fail info to the user.
+                // this.props.setUploadState('ERROR'); // this is disabled while we decide on how to relay the fail info to the user.
             });
         }
     }
@@ -330,7 +330,7 @@ export const Shell = connect(
         // ASK PRO
         apSendFiles: (attachment: any) => dispatchProps.apSendFiles(attachment, stateProps.user, stateProps.locale),
         disableInput: () => dispatchProps.disableInput(),
-        enableInput: () => dispatchProps.disableInput()
+        enableInput: () => dispatchProps.enableInput()
 
     }), {
         withRef: true
