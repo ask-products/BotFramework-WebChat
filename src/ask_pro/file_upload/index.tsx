@@ -1,7 +1,7 @@
 
 import axios from 'axios';
-const ax = axios.create({ baseURL: '', timeout: 1000, headers: '' });
-// const ax = axios.create({ baseURL: '', timeout: 30000, headers: '' });
+// const ax = axios.create({ baseURL: '', timeout: 1000, headers: '' }); //short timout for testing
+const ax = axios.create({ baseURL: '', timeout: 30000, headers: '' });
 
 const getSignedUrl = async (file: any) => {
     const authResult = JSON.parse(localStorage.getItem('auth_result'));
