@@ -72,10 +72,6 @@ var ShellContainer = (function (_super) {
             var call = calls_1[_b];
             var attachment = [call];
             call.then(function (value) {
-<<<<<<< HEAD
-                // console.log(value);
-=======
->>>>>>> 1cdb6860bad883edf6d39be06d3d4cc8e84feab7
                 _this.props.apSendFiles([value]);
                 _this.removePendingFiles(value.name);
                 // if all pending files are finished
@@ -87,10 +83,6 @@ var ShellContainer = (function (_super) {
                 _this.textInput.focus();
             })
                 .catch(function (err) {
-<<<<<<< HEAD
-                // console.log('error >>', err);
-=======
->>>>>>> 1cdb6860bad883edf6d39be06d3d4cc8e84feab7
                 _this.removePendingFiles(err.file);
                 _this.addErrorFiles(err.file);
                 // this.props.setUploadState('ERROR'); // this is disabled while we dicide on how to relay the fail info to the user.
