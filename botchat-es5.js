@@ -21691,7 +21691,7 @@ var ShellContainer = (function (_super) {
         }
         return (React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", style: { "position": "absolute", "top": "22px" }, className: 'upload-indicator' },
             React.createElement("ellipse", { cx: "8", cy: "8", rx: "8", ry: "8", fill: col }),
-            React.createElement("text", { x: "4", y: "13", width: "8", height: "8", color: "#000", fontSize: "small" }, count)));
+            React.createElement("text", { x: "4", y: "13", width: "8", height: "8", color: "%23000", fontSize: "small" }, count)));
     };
     ShellContainer.prototype.render = function () {
         var _this = this;
@@ -21702,7 +21702,6 @@ var ShellContainer = (function (_super) {
         var placeholder = this.props.listeningState === Store_1.ListeningState.STARTED ? this.props.strings.listeningIndicator : this.props.strings.consolePlaceholder;
         return (React.createElement("div", { className: className },
             this.props.apUi.pendingUploads.length > 0 && this.uploadBadge(this.props.apUi.pendingUploads.length, 'upload'),
-            this.props.apUi.erroredUploads.length > 0 && this.uploadBadge(this.props.apUi.erroredUploads.length, 'error'),
             this.props.showUploadButton &&
                 React.createElement("label", { className: "wc-upload", htmlFor: "wc-upload-input", onKeyPress: function (evt) { return _this.handleUploadButtonKeyPress(evt); }, tabIndex: 0 }, this.fileIcon(this.props.apUi.uploadState)),
             this.props.showUploadButton &&
@@ -22297,8 +22296,8 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(6);
 var axios_1 = __webpack_require__(163);
-var ax = axios_1.default.create({ baseURL: '', timeout: 1000, headers: '' });
-// const ax = axios.create({ baseURL: '', timeout: 30000, headers: '' });
+// const ax = axios.create({ baseURL: '', timeout: 1000, headers: '' }); //short timout for testing
+var ax = axios_1.default.create({ baseURL: '', timeout: 30000, headers: '' });
 var getSignedUrl = function (file) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
     var authResult, info, profile, key, ident;
     return tslib_1.__generator(this, function (_a) {

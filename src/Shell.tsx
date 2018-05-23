@@ -180,7 +180,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
             return (
                 <svg xmlns="http://www.w3.org/2000/svg" style={{"position":"absolute", "top":"22px"}} className={'upload-indicator'}>
                     <ellipse cx="8" cy="8" rx="8" ry="8" fill={col}/>
-                    <text x="4" y="13" width="8" height="8" color="#000" fontSize="small">{count}</text>
+                    <text x="4" y="13" width="8" height="8" color="%23000" fontSize="small">{count}</text>
                 </svg>
             );
         }
@@ -210,7 +210,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
         return (
             <div className={ className }>
              {this.props.apUi.pendingUploads.length > 0 && this.uploadBadge(this.props.apUi.pendingUploads.length, 'upload')}
-             {this.props.apUi.erroredUploads.length > 0 && this.uploadBadge(this.props.apUi.erroredUploads.length, 'error')}
+             {/* {this.props.apUi.erroredUploads.length > 0 && this.uploadBadge(this.props.apUi.erroredUploads.length, 'error')} */}
              {/* {true && this.uploadBadge(this.props.apUi.pendingUploads.length)} */}
                 {
                     this.props.showUploadButton &&
