@@ -21596,13 +21596,10 @@ var ShellContainer = (function (_super) {
     };
     ShellContainer.prototype.addPendingFiles = function (value) {
         var newpending = this.props.apUi.pendingUploads.slice(0);
-        console.log(newpending);
         newpending.push(value);
-        console.log(newpending);
         this.props.setUploadFiles(newpending);
     };
     ShellContainer.prototype.removePendingFiles = function (value) {
-        console.log('remove pending>>', value);
         var newpending = this.props.apUi.pendingUploads.filter(function (file) { return file !== value; });
         this.props.setUploadFiles(newpending);
     };
@@ -21618,7 +21615,6 @@ var ShellContainer = (function (_super) {
     ShellContainer.prototype.onChangeFile = function () {
         var _this = this;
         // set state variable holding valueas for pending upload files.
-        // console.log(this.fileInput.files);
         var fileData = file_upload_1.apUriFromFiles(this.fileInput.files);
         var calls = fileData[0];
         for (var _i = 0, _a = fileData[1]; _i < _a.length; _i++) {
@@ -21630,7 +21626,6 @@ var ShellContainer = (function (_super) {
             var call = calls_1[_b];
             var attachment = [call];
             call.then(function (value) {
-                console.log(value);
                 _this.props.apSendFiles([value]);
                 _this.removePendingFiles(value.name);
                 // if all pending files are finished
@@ -21642,7 +21637,6 @@ var ShellContainer = (function (_super) {
                 _this.textInput.focus();
             })
                 .catch(function (err) {
-                console.log('error >>', err);
                 _this.removePendingFiles(err.file);
                 _this.addErrorFiles(err.file);
                 _this.props.setUploadState('ERROR');

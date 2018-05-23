@@ -77,13 +77,10 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
     }
     private addPendingFiles(value: string) {
         let newpending = this.props.apUi.pendingUploads.slice(0);
-        console.log(newpending);
         newpending.push(value);
-        console.log(newpending);
         this.props.setUploadFiles(newpending);
     }
     private removePendingFiles(value: string) {
-        console.log('remove pending>>', value);
         let newpending = this.props.apUi.pendingUploads.filter( (file: string) => {return file !== value} ); 
         this.props.setUploadFiles(newpending);
     }
@@ -98,7 +95,6 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
     }
     private onChangeFile() {
         // set state variable holding valueas for pending upload files.
-        // console.log(this.fileInput.files);
         const fileData = apUriFromFiles(this.fileInput.files);
         const calls = fileData[0];
         for(let file of fileData[1]){
@@ -108,7 +104,6 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
         for(let call of calls){
             const attachment = [call];
             call.then((value: any) => {
-                console.log(value);
                 this.props.apSendFiles([value]);
                 this.removePendingFiles(value.name);
                 // if all pending files are finished
@@ -120,7 +115,6 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                 this.textInput.focus();
             })
             .catch((err: any) => {
-                console.log('error >>', err);
                 this.removePendingFiles(err.file);
                 this.addErrorFiles(err.file);
                 this.props.setUploadState('ERROR');
