@@ -77,13 +77,10 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
     }
     private addPendingFiles(value: string) {
         let newpending = this.props.apUi.pendingUploads.slice(0);
-        console.log(newpending);
         newpending.push(value);
-        console.log(newpending);
         this.props.setUploadFiles(newpending);
     }
     private removePendingFiles(value: string) {
-        console.log('remove pending>>', value);
         let newpending = this.props.apUi.pendingUploads.filter( (file: string) => {return file !== value} ); 
         this.props.setUploadFiles(newpending);
     }
@@ -98,7 +95,6 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
     }
     private onChangeFile() {
         // set state variable holding valueas for pending upload files.
-        // console.log(this.fileInput.files);
         const fileData = apUriFromFiles(this.fileInput.files);
         const calls = fileData[0];
         for(let file of fileData[1]){
@@ -108,7 +104,6 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
         for(let call of calls){
             const attachment = [call];
             call.then((value: any) => {
-                // console.log(value);
                 this.props.apSendFiles([value]);
                 this.removePendingFiles(value.name);
                 // if all pending files are finished
@@ -120,7 +115,6 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                 this.textInput.focus();
             })
             .catch((err: any) => {
-                // console.log('error >>', err);
                 this.removePendingFiles(err.file);
                 this.addErrorFiles(err.file);
                 // this.props.setUploadState('ERROR'); // this is disabled while we dicide on how to relay the fail info to the user.
@@ -180,7 +174,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
             return (
                 <svg xmlns="http://www.w3.org/2000/svg" style={{"position":"absolute", "top":"22px"}} className={'upload-indicator'}>
                     <ellipse cx="8" cy="8" rx="8" ry="8" fill={col}/>
-                    <text x="4" y="13" width="8" height="8" color="#000" fontSize="small">{count}</text>
+                    <text x="4" y="13" width="8" height="8" color="%23000" fontSize="small">{count}</text>
                 </svg>
             );
         }
@@ -210,7 +204,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
         return (
             <div className={ className }>
              {this.props.apUi.pendingUploads.length > 0 && this.uploadBadge(this.props.apUi.pendingUploads.length, 'upload')}
-             {this.props.apUi.erroredUploads.length > 0 && this.uploadBadge(this.props.apUi.erroredUploads.length, 'error')}
+             {/* {this.props.apUi.erroredUploads.length > 0 && this.uploadBadge(this.props.apUi.erroredUploads.length, 'error')} */}
              {/* {true && this.uploadBadge(this.props.apUi.pendingUploads.length)} */}
                 {
                     this.props.showUploadButton &&

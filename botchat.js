@@ -15648,13 +15648,10 @@ var ShellContainer = (function (_super) {
     };
     ShellContainer.prototype.addPendingFiles = function (value) {
         var newpending = this.props.apUi.pendingUploads.slice(0);
-        console.log(newpending);
         newpending.push(value);
-        console.log(newpending);
         this.props.setUploadFiles(newpending);
     };
     ShellContainer.prototype.removePendingFiles = function (value) {
-        console.log('remove pending>>', value);
         var newpending = this.props.apUi.pendingUploads.filter(function (file) { return file !== value; });
         this.props.setUploadFiles(newpending);
     };
@@ -15670,7 +15667,6 @@ var ShellContainer = (function (_super) {
     ShellContainer.prototype.onChangeFile = function () {
         var _this = this;
         // set state variable holding valueas for pending upload files.
-        // console.log(this.fileInput.files);
         var fileData = file_upload_1.apUriFromFiles(this.fileInput.files);
         var calls = fileData[0];
         for (var _i = 0, _a = fileData[1]; _i < _a.length; _i++) {
@@ -15682,7 +15678,6 @@ var ShellContainer = (function (_super) {
             var call = calls_1[_b];
             var attachment = [call];
             call.then(function (value) {
-                // console.log(value);
                 _this.props.apSendFiles([value]);
                 _this.removePendingFiles(value.name);
                 // if all pending files are finished
@@ -15694,7 +15689,6 @@ var ShellContainer = (function (_super) {
                 _this.textInput.focus();
             })
                 .catch(function (err) {
-                // console.log('error >>', err);
                 _this.removePendingFiles(err.file);
                 _this.addErrorFiles(err.file);
                 // this.props.setUploadState('ERROR'); // this is disabled while we dicide on how to relay the fail info to the user.
@@ -15743,7 +15737,7 @@ var ShellContainer = (function (_super) {
         }
         return (React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", style: { "position": "absolute", "top": "22px" }, className: 'upload-indicator' },
             React.createElement("ellipse", { cx: "8", cy: "8", rx: "8", ry: "8", fill: col }),
-            React.createElement("text", { x: "4", y: "13", width: "8", height: "8", color: "#000", fontSize: "small" }, count)));
+            React.createElement("text", { x: "4", y: "13", width: "8", height: "8", color: "%23000", fontSize: "small" }, count)));
     };
     ShellContainer.prototype.render = function () {
         var _this = this;
@@ -15754,7 +15748,6 @@ var ShellContainer = (function (_super) {
         var placeholder = this.props.listeningState === Store_1.ListeningState.STARTED ? this.props.strings.listeningIndicator : this.props.strings.consolePlaceholder;
         return (React.createElement("div", { className: className },
             this.props.apUi.pendingUploads.length > 0 && this.uploadBadge(this.props.apUi.pendingUploads.length, 'upload'),
-            this.props.apUi.erroredUploads.length > 0 && this.uploadBadge(this.props.apUi.erroredUploads.length, 'error'),
             this.props.showUploadButton &&
                 React.createElement("label", { className: "wc-upload", htmlFor: "wc-upload-input", onKeyPress: function (evt) { return _this.handleUploadButtonKeyPress(evt); }, tabIndex: 0 }, this.fileIcon(this.props.apUi.uploadState)),
             this.props.showUploadButton &&
