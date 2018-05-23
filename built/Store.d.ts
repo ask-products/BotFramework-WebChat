@@ -52,6 +52,8 @@ export declare const setUploadState: (newState: string) => UiAction;
 export interface UiState {
     uploadState: string;
     inputState: boolean;
+    pendingUploads: string[];
+    erroredUploads: string[];
 }
 export declare type UiAction = {
     type: 'Set_Upload_State';
@@ -59,6 +61,12 @@ export declare type UiAction = {
 } | {
     type: 'Set_Input_State';
     newState: boolean;
+} | {
+    type: 'Set_Upload_Files';
+    files: string[];
+} | {
+    type: 'Set_Error_Files';
+    files: string[];
 };
 export declare const apUi: Reducer<UiState>;
 export interface FormatState {

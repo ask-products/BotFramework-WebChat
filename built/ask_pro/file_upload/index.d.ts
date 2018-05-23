@@ -1,2 +1,2 @@
-declare const apUriFromFiles: (files: any) => any;
+declare const apUriFromFiles: (files: any) => any[];
 export { apUriFromFiles };

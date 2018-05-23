@@ -644,7 +644,9 @@
             fill: $c05;
             margin: 4px;
         }
-
+        svg.upload-indicator{
+            fill: #616161;
+        }
         input[type=text],
         textarea {
             border: none;

@@ -97,13 +97,19 @@ exports.setUploadState = function (newState) { return ({
 exports.apUi = function (state, action) {
     if (state === void 0) { state = {
         uploadState: 'DEFAULT',
-        inputState: true
+        inputState: true,
+        pendingUploads: [],
+        erroredUploads: []
     }; }
     switch (action.type) {
         case 'Set_Upload_State':
             return tslib_1.__assign({}, state, { uploadState: action.newState });
         case 'Set_Input_State':
             return tslib_1.__assign({}, state, { inputState: action.newState });
+        case 'Set_Upload_Files':
+            return tslib_1.__assign({}, state, { pendingUploads: action.files });
+        case 'Set_Error_Files':
+            return tslib_1.__assign({}, state, { erroredUploads: action.files });
         default:
             return state;
     }

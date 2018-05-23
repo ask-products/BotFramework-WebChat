@@ -1,6 +1,7 @@
 
 import axios from 'axios';
-const ax = axios.create({ baseURL: '', timeout: 30000, headers: '' });
+const ax = axios.create({ baseURL: '', timeout: 1000, headers: '' });
+// const ax = axios.create({ baseURL: '', timeout: 30000, headers: '' });
 
 const getSignedUrl = async (file: any) => {
     const authResult = JSON.parse(localStorage.getItem('auth_result'));
@@ -21,6 +22,8 @@ const getSignedUrl = async (file: any) => {
                         fileType: file.type,
                         fileName: info.domain+'/'+ident+'/'+file.name
                     }
+    }).catch((err) => {
+        throw {err: err, file: file.name};
     })
     .then((r) => {
         return ({
@@ -37,6 +40,9 @@ const putFile = async (response: any, file: any) => {
         headers:    { 'content-type': file.type },
         data:       file
     })
+    .catch((err) => {
+        throw {err: err, file: file.name};
+    })
     .then((r) => {
         return ({
             contentUrl:     'https://s3-eu-west-1.amazonaws.com/re-porter-customer-files/' + response.fileName,
@@ -46,9 +52,10 @@ const putFile = async (response: any, file: any) => {
     });
 }
 const apUriFromFiles = (files: any) =>{
+    let fileNames: any = [];
     let calls: any = [];
     for(let userFile of files) {
-
+        fileNames.push(userFile.name);
         calls.push( getSignedUrl(userFile)
                     .then((r: any) => {
                         if( r.status === 200 ){
@@ -59,7 +66,7 @@ const apUriFromFiles = (files: any) =>{
                     })
         )
     }
-    return calls;
+    return [calls, fileNames];
 }
 
 export { apUriFromFiles }

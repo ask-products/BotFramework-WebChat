@@ -463,6 +463,8 @@ body .wc-app, .wc-app button, .wc-app input, .wc-app textarea {
   .wc-console svg {
     fill: #cccccc;
     margin: 4px; }
+  .wc-console svg.upload-indicator {
+    fill: #616161; }
   .wc-console input[type=text],
   .wc-console textarea {
     border: none;

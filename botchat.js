@@ -3599,13 +3599,19 @@ exports.setUploadState = function (newState) { return ({
 exports.apUi = function (state, action) {
     if (state === void 0) { state = {
         uploadState: 'DEFAULT',
-        inputState: true
+        inputState: true,
+        pendingUploads: [],
+        erroredUploads: []
     }; }
     switch (action.type) {
         case 'Set_Upload_State':
             return tslib_1.__assign({}, state, { uploadState: action.newState });
         case 'Set_Input_State':
             return tslib_1.__assign({}, state, { inputState: action.newState });
+        case 'Set_Upload_Files':
+            return tslib_1.__assign({}, state, { pendingUploads: action.files });
+        case 'Set_Error_Files':
+            return tslib_1.__assign({}, state, { erroredUploads: action.files });
         default:
             return state;
     }
@@ -15640,22 +15646,58 @@ var ShellContainer = (function (_super) {
     ShellContainer.prototype.onClickSend = function () {
         this.sendMessage();
     };
+    ShellContainer.prototype.addPendingFiles = function (value) {
+        var newpending = this.props.apUi.pendingUploads.slice(0);
+        console.log(newpending);
+        newpending.push(value);
+        console.log(newpending);
+        this.props.setUploadFiles(newpending);
+    };
+    ShellContainer.prototype.removePendingFiles = function (value) {
+        console.log('remove pending>>', value);
+        var newpending = this.props.apUi.pendingUploads.filter(function (file) { return file !== value; });
+        this.props.setUploadFiles(newpending);
+    };
+    ShellContainer.prototype.addErrorFiles = function (value) {
+        var newerrors = this.props.apUi.erroredUploads.slice(0);
+        newerrors.push(value);
+        this.props.setErrorFiles(newerrors);
+    };
+    ShellContainer.prototype.removeErrorFiles = function (value) {
+        var newerror = this.props.apUi.erroredUploads.filter(function (file) { return file !== value; });
+        this.props.setErrorFiles(newerror);
+    };
     ShellContainer.prototype.onChangeFile = function () {
         var _this = this;
-        var calls = file_upload_1.apUriFromFiles(this.fileInput.files);
-        this.props.disableInput();
+        // set state variable holding valueas for pending upload files.
+        // console.log(this.fileInput.files);
+        var fileData = file_upload_1.apUriFromFiles(this.fileInput.files);
+        var calls = fileData[0];
+        for (var _i = 0, _a = fileData[1]; _i < _a.length; _i++) {
+            var file = _a[_i];
+            this.addPendingFiles(file);
+        }
         this.props.setUploadState('UPLOADING');
-        for (var _i = 0, calls_1 = calls; _i < calls_1.length; _i++) {
-            var call = calls_1[_i];
+        for (var _b = 0, calls_1 = calls; _b < calls_1.length; _b++) {
+            var call = calls_1[_b];
             var attachment = [call];
             call.then(function (value) {
+                console.log(value);
                 _this.props.apSendFiles([value]);
-                _this.props.setUploadState('DEFAULT');
+                _this.removePendingFiles(value.name);
+                // if all pending files are finished
+                if (_this.props.apUi.pendingUploads.length === 0) {
+                    _this.props.setUploadState('DEFAULT');
+                }
+                // reset Ui
                 _this.fileInput.value = null;
                 _this.textInput.focus();
             })
                 .catch(function (err) {
-                console.log(err);
+                console.log('error >>', err);
+                _this.removePendingFiles(err.file);
+                _this.addErrorFiles(err.file);
+                _this.props.setUploadState('ERROR');
             });
         }
     };
@@ -15683,10 +15725,25 @@ var ShellContainer = (function (_super) {
             case 'UPLOADING':
                 return (React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 512 512" },
                     React.createElement("path", { d: "M412.6 227.1L278.6 89c-5.8-6-13.7-9-22.4-9h-.4c-8.7 0-16.6 3-22.4 9l-134 138.1c-12.5 12-12.5 31.3 0 43.2 12.5 11.9 32.7 11.9 45.2 0l79.4-83v214c0 16.9 14.3 30.6 32 30.6 18 0 32-13.7 32-30.6v-214l79.4 83c12.5 11.9 32.7 11.9 45.2 0s12.5-31.2 0-43.2z" })));
+            // case 'ERROR':
+            //     return (
+            //         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            //             <path d="M278.6 256l68.2-68.2c6.2-6.2 6.2-16.4 0-22.6-6.2-6.2-16.4-6.2-22.6 0L256 233.4l-68.2-68.2c-6.2-6.2-16.4-6.2-22.6 0-3.1 3.1-4.7 7.2-4.7 11.3 0 4.1 1.6 8.2 4.7 11.3l68.2 68.2-68.2 68.2c-3.1 3.1-4.7 7.2-4.7 11.3 0 4.1 1.6 8.2 4.7 11.3 6.2 6.2 16.4 6.2 22.6 0l68.2-68.2 68.2 68.2c6.2 6.2 16.4 6.2 22.6 0 6.2-6.2 6.2-16.4 0-22.6L278.6 256z"/>
+            //         </svg>
+            //     );
             default:
                 return (React.createElement("svg", null,
                     React.createElement("path", { d: "M17.1739993,7.70416151 C19.4161161,5.52059528 23.0822691,5.52059528 25.3243331,7.70410998 C27.7184735,10.0341339 27.4282212,13.5644568 25.3243597,15.6098095 L15.6287879,25.048979 L14.6758693,24.1216236 L14.8354747,23.9669607 L24.3842707,14.7139495 C25.9787245,13.241131 26.215502,10.4556717 24.3800429,8.59166733 C22.6755457,6.92968323 19.8228395,6.92968323 18.1182195,8.591787 L7.28700007,19.1360817 C5.99581012,20.3932153 5.99581012,22.3963603 7.28700007,23.6090772 C8.58142055,24.8693561 10.6481765,24.8693561 11.8975833,23.6086611 L21.1690052,14.63163 C21.9542576,13.8660587 21.9542576,12.5770803 21.1690052,11.8115091 C20.3806892,11.0429512 19.0476,11.0429512 18.2591652,11.8116248 L10.0744157,19.7789766 L9.12191043,18.8520235 L9.28071807,18.6973492 L17.3103469,10.8767105 C18.6319247,9.58632427 20.787555,9.58632427 22.1091328,10.8767105 C23.4335913,12.1699093 23.4335913,14.2732298 22.1089295,15.5666269 L12.8414124,24.5916211 C10.820263,26.5607117 7.91585521,26.1828043 6.30219937,24.5949593 C4.59286478,23.0027813 4.5113578,19.9590317 6.34441985,18.2468596 L17.1739993,7.70416151 Z", id: "Shape" })));
         }
+    };
+    ShellContainer.prototype.uploadBadge = function (count, type) {
+        var col = "#EEE";
+        if (type === 'error') {
+            col = "#ffccd3";
+        }
+        return (React.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", style: { "position": "absolute", "top": "22px" }, className: 'upload-indicator' },
+            React.createElement("ellipse", { cx: "8", cy: "8", rx: "8", ry: "8", fill: col }),
+            React.createElement("text", { x: "4", y: "13", width: "8", height: "8", color: "#000", fontSize: "small" }, count)));
     };
     ShellContainer.prototype.render = function () {
         var _this = this;
@@ -15696,6 +15753,8 @@ var ShellContainer = (function (_super) {
         var micButtonClassName = Chat_1.classList('wc-mic', !showMicButton && 'hidden', this.props.listeningState === Store_1.ListeningState.STARTED && 'active', this.props.listeningState !== Store_1.ListeningState.STARTED && 'inactive');
         var placeholder = this.props.listeningState === Store_1.ListeningState.STARTED ? this.props.strings.listeningIndicator : this.props.strings.consolePlaceholder;
         return (React.createElement("div", { className: className },
+            this.props.apUi.pendingUploads.length > 0 && this.uploadBadge(this.props.apUi.pendingUploads.length, 'upload'),
+            this.props.apUi.erroredUploads.length > 0 && this.uploadBadge(this.props.apUi.erroredUploads.length, 'error'),
             this.props.showUploadButton &&
                 React.createElement("label", { className: "wc-upload", htmlFor: "wc-upload-input", onKeyPress: function (evt) { return _this.handleUploadButtonKeyPress(evt); }, tabIndex: 0 }, this.fileIcon(this.props.apUi.uploadState)),
             this.props.showUploadButton &&
@@ -15731,6 +15790,8 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     startListening: function () { return ({ type: 'Listening_Starting' }); },
     disableInput: function () { return ({ type: 'Set_Input_State', newState: false }); },
     enableInput: function () { return ({ type: 'Set_Input_State', newState: true }); },
+    setUploadFiles: function (files) { return ({ type: 'Set_Upload_Files', files: files }); },
+    setErrorFiles: function (files) { return ({ type: 'Set_Error_Files', files: files }); },
     // only used to create helper functions below
     sendMessage: Store_1.sendMessage,
     sendFiles: Store_1.sendFiles,
@@ -15749,6 +15810,8 @@ exports.Shell = react_redux_1.connect(function (state) { return ({
     sendMessage: function (text) { return dispatchProps.sendMessage(text, stateProps.user, stateProps.locale); },
     sendFiles: function (files) { return dispatchProps.sendFiles(files, stateProps.user, stateProps.locale); },
     setUploadState: function (state) { return dispatchProps.setUploadState(state); },
+    setUploadFiles: function (files) { return dispatchProps.setUploadFiles(files); },
+    setErrorFiles: function (files) { return dispatchProps.setErrorFiles(files); },
     startListening: function () { return dispatchProps.startListening(); },
     stopListening: function () { return dispatchProps.stopListening(); },
     // ASK PRO
@@ -16271,7 +16334,8 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(6);
 var axios_1 = __webpack_require__(143);
-var ax = axios_1.default.create({ baseURL: '', timeout: 30000, headers: '' });
+var ax = axios_1.default.create({ baseURL: '', timeout: 1000, headers: '' });
+// const ax = axios.create({ baseURL: '', timeout: 30000, headers: '' });
 var getSignedUrl = function (file) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
     var authResult, info, profile, key, ident;
     return tslib_1.__generator(this, function (_a) {
@@ -16292,6 +16356,8 @@ var getSignedUrl = function (file) { return tslib_1.__awaiter(_this, void 0, voi
                     fileType: file.type,
                     fileName: info.domain + '/' + ident + '/' + file.name
                 }
+            }).catch(function (err) {
+                throw { err: err, file: file.name };
             })
                 .then(function (r) {
                 return ({
@@ -16310,6 +16376,9 @@ var putFile = function (response, file) { return tslib_1.__awaiter(_this, void 0
                 headers: { 'content-type': file.type },
                 data: file
             })
+                .catch(function (err) {
+                throw { err: err, file: file.name };
+            })
                 .then(function (r) {
                 return ({
                     contentUrl: 'https://s3-eu-west-1.amazonaws.com/re-porter-customer-files/' + response.fileName,
@@ -16320,8 +16389,10 @@ var putFile = function (response, file) { return tslib_1.__awaiter(_this, void 0
     });
 }); };
 var apUriFromFiles = function (files) {
+    var fileNames = [];
     var calls = [];
     var _loop_1 = function (userFile) {
+        fileNames.push(userFile.name);
         calls.push(getSignedUrl(userFile)
             .then(function (r) {
             if (r.status === 200) {
@@ -16336,7 +16407,7 @@ var apUriFromFiles = function (files) {
         var userFile = files_1[_i];
         _loop_1(userFile);
     }
-    return calls;
+    return [calls, fileNames];
 };
 exports.apUriFromFiles = apUriFromFiles;
 

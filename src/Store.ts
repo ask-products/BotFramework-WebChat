@@ -173,7 +173,9 @@ export const setUploadState = (newState: string) => ({
 
 export interface UiState {
     uploadState: string,
-    inputState: boolean
+    inputState: boolean,
+    pendingUploads: string[],
+    erroredUploads: string[]
 }
 export type UiAction = {
     type:'Set_Upload_State',
@@ -181,11 +183,19 @@ export type UiAction = {
 } | {
     type: 'Set_Input_State',
     newState: boolean
+} | {
+    type: 'Set_Upload_Files',
+    files: string[]
+} | {
+    type: 'Set_Error_Files',
+    files: string[]
 }
 export const apUi: Reducer<UiState> = (
     state: UiState = {
         uploadState: 'DEFAULT',
-        inputState: true
+        inputState: true,
+        pendingUploads: [],
+        erroredUploads: []
     },
     action: UiAction
 ) => {
@@ -199,6 +209,16 @@ export const apUi: Reducer<UiState> = (
         return {
             ...state,
             inputState: action.newState
+        }
+        case 'Set_Upload_Files':
+        return {
+            ...state,
+            pendingUploads: action.files
+        }
+        case 'Set_Error_Files':
+        return {
+            ...state,
+            erroredUploads: action.files
         }
     default:
         return state;
