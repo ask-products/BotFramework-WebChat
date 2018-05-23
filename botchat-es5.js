@@ -21630,7 +21630,7 @@ var ShellContainer = (function (_super) {
             var call = calls_1[_b];
             var attachment = [call];
             call.then(function (value) {
-                console.log(value);
+                // console.log(value);
                 _this.props.apSendFiles([value]);
                 _this.removePendingFiles(value.name);
                 // if all pending files are finished
@@ -21642,10 +21642,10 @@ var ShellContainer = (function (_super) {
                 _this.textInput.focus();
             })
                 .catch(function (err) {
-                console.log('error >>', err);
+                // console.log('error >>', err);
                 _this.removePendingFiles(err.file);
                 _this.addErrorFiles(err.file);
-                _this.props.setUploadState('ERROR');
+                // this.props.setUploadState('ERROR'); // this is disabled while we dicide on how to relay the fail info to the user.
             });
         }
     };
@@ -22297,8 +22297,8 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = __webpack_require__(6);
 var axios_1 = __webpack_require__(163);
-var ax = axios_1.default.create({ baseURL: '', timeout: 1000, headers: '' });
-// const ax = axios.create({ baseURL: '', timeout: 30000, headers: '' });
+// const ax = axios.create({ baseURL: '', timeout: 1000, headers: '' }); //short timout for testing
+var ax = axios_1.default.create({ baseURL: '', timeout: 30000, headers: '' });
 var getSignedUrl = function (file) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
     var authResult, info, profile, key, ident;
     return tslib_1.__generator(this, function (_a) {

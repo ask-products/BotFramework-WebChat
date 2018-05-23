@@ -108,7 +108,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
         for(let call of calls){
             const attachment = [call];
             call.then((value: any) => {
-                console.log(value);
+                // console.log(value);
                 this.props.apSendFiles([value]);
                 this.removePendingFiles(value.name);
                 // if all pending files are finished
@@ -120,10 +120,10 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                 this.textInput.focus();
             })
             .catch((err: any) => {
-                console.log('error >>', err);
+                // console.log('error >>', err);
                 this.removePendingFiles(err.file);
                 this.addErrorFiles(err.file);
-                this.props.setUploadState('ERROR');
+                // this.props.setUploadState('ERROR'); // this is disabled while we dicide on how to relay the fail info to the user.
             });
         }
     }

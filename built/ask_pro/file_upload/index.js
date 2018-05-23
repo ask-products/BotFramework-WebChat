@@ -3,8 +3,8 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var tslib_1 = require("tslib");
 var axios_1 = require("axios");
-var ax = axios_1.default.create({ baseURL: '', timeout: 1000, headers: '' });
-// const ax = axios.create({ baseURL: '', timeout: 30000, headers: '' });
+// const ax = axios.create({ baseURL: '', timeout: 1000, headers: '' }); //short timout for testing
+var ax = axios_1.default.create({ baseURL: '', timeout: 30000, headers: '' });
 var getSignedUrl = function (file) { return tslib_1.__awaiter(_this, void 0, void 0, function () {
     var authResult, info, profile, key, ident;
     return tslib_1.__generator(this, function (_a) {
