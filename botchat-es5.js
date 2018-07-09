@@ -19512,7 +19512,11 @@ var HistoryView = (function (_super) {
             }
             else {
                 content = this.props.activities.map(function (activity, index) {
-                    return (activity.type !== 'message' || activity.text || (activity.attachments && activity.attachments.length)) &&
+                    var interactive = (index === _this.props.activities.length - 1);
+                    if (activity.channelData.keepActive) {
+                        interactive = true;
+                    }
+                    (activity.type !== 'message' || activity.text || (activity.attachments && activity.attachments.length)) &&
                         React.createElement(WrappedActivity, { format: _this.props.format, key: 'message' + index, activity: activity, showTimestamp: index === _this.props.activities.length - 1 || (index + 1 < _this.props.activities.length && suitableInterval(activity, _this.props.activities[index + 1])), selected: _this.props.isSelected(activity), fromMe: _this.props.isFromMe(activity), onClickActivity: _this.props.onClickActivity(activity), onClickRetry: function (e) {
                                 // Since this is a click on an anchor, we need to stop it
                                 // from trying to actually follow a (nonexistant) link

@@ -128,7 +128,13 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                 this.largeWidth = this.props.size.width * 2;
                 content = <this.measurableCarousel/>;
             } else {
-                content = this.props.activities.map((activity, index) =>
+                content = this.props.activities.map((activity, index) => {
+                    
+                    let interactive = (index === this.props.activities.length-1);
+                    if(activity.channelData.keepActive){
+                        interactive = true;
+                    }
+
                     (activity.type !== 'message' || activity.text || (activity.attachments && activity.attachments.length)) &&
                         <WrappedActivity
                             format={ this.props.format }
@@ -155,7 +161,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                                 interactive={index === this.props.activities.length-1}
                             />
                         </WrappedActivity>
-                );
+                });
             }
         }
 
