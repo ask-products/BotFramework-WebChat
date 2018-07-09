@@ -161,6 +161,11 @@ export class Chat extends React.Component<ChatProps, {}> {
                     if (historyDOM) {
                         historyDOM.focus();
                     }
+                } else {
+                    // message is from this user - check for conversation dialog
+                    if(this.props.activityType === 'RP_CONVERSATION') {
+                        this.store.dispatch<ChatActions>({type:'Set_Input_State', newState: true});
+                    }
                 }
                 break;
                 
