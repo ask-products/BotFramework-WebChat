@@ -131,9 +131,10 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                 content = this.props.activities.map((activity, index) => {
                     
                     let interactive = (index === this.props.activities.length-1);
-                    if(activity.channelData.keepActive){
-                        interactive = true;
-                    }
+                    console.log(activity);
+                    // if(activity.channelData.keepActive){
+                    //     interactive = true;
+                    // }
 
                     (activity.type !== 'message' || activity.text || (activity.attachments && activity.attachments.length)) &&
                         <WrappedActivity
