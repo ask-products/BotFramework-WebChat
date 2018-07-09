@@ -192,6 +192,10 @@ var Chat = (function (_super) {
         window.removeEventListener('resize', this.resizeListener);
     };
     Chat.prototype.componentWillReceiveProps = function (nextProps) {
+        this.store.dispatch({
+            type: 'Set_Activity_Type',
+            activityType: this.props.activityType
+        });
         if (this.props.adaptiveCardsHostConfig !== nextProps.adaptiveCardsHostConfig) {
             this.store.dispatch({
                 type: 'Set_AdaptiveCardsHostConfig',
