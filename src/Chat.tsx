@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/Observable';
 import {Subscription} from 'rxjs/Subscription';
 
 import { Activity, IBotConnection, User, DirectLine, DirectLineOptions, CardActionTypes } from 'botframework-directlinejs';
-import { createStore, ChatActions, sendMessage } from './Store';
+import { createStore, ChatActions, sendMessage, UiAction } from './Store';
 import { Provider } from 'react-redux';
 import { SpeechOptions } from './SpeechOptions';
 import { Speech } from './SpeechModule';
@@ -37,7 +37,10 @@ export interface ChatProps {
     // ASKPRO - Data to send to the bot
     channelData?: any,
     // ASKPRO - To override the default blue
-    themeColour?: string
+    themeColour?: string,
+    // ASKPRO - Data for chat ui
+    activityType?: string;
+
 }
 
 import { History } from './History';
@@ -157,6 +160,11 @@ export class Chat extends React.Component<ChatProps, {}> {
 
                     if (historyDOM) {
                         historyDOM.focus();
+                    }
+                } else {
+                    // message is from this user - check for conversation dialog
+                    if(this.props.activityType === 'RP_CONVERSATION') {
+                        this.store.dispatch<ChatActions>({type:'Set_Input_State', newState: true});
                     }
                 }
                 break;
@@ -300,6 +308,10 @@ export class Chat extends React.Component<ChatProps, {}> {
     }
 
     componentWillReceiveProps(nextProps: ChatProps) {
+        this.store.dispatch<ChatActions>({
+            type: 'Set_Activity_Type',
+            activityType: this.props.activityType
+        })
         if (this.props.adaptiveCardsHostConfig !== nextProps.adaptiveCardsHostConfig) {
             this.store.dispatch<ChatActions>({
                 type: 'Set_AdaptiveCardsHostConfig',

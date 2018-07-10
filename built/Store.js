@@ -99,7 +99,8 @@ exports.apUi = function (state, action) {
         uploadState: 'DEFAULT',
         inputState: true,
         pendingUploads: [],
-        erroredUploads: []
+        erroredUploads: [],
+        activityType: null
     }; }
     switch (action.type) {
         case 'Set_Upload_State':
@@ -110,6 +111,8 @@ exports.apUi = function (state, action) {
             return tslib_1.__assign({}, state, { pendingUploads: action.files });
         case 'Set_Error_Files':
             return tslib_1.__assign({}, state, { erroredUploads: action.files });
+        case 'Set_Activity_Type':
+            return tslib_1.__assign({}, state, { activityType: action.activityType });
         default:
             return state;
     }

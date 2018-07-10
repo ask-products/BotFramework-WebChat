@@ -82,6 +82,12 @@ var Chat = (function (_super) {
                         historyDOM.focus();
                     }
                 }
+                else {
+                    // message is from this user - check for conversation dialog
+                    if (this.props.activityType === 'RP_CONVERSATION') {
+                        this.store.dispatch({ type: 'Set_Input_State', newState: true });
+                    }
+                }
                 break;
             case "typing":
                 if (activity.from.id !== state.connection.user.id)
@@ -192,6 +198,10 @@ var Chat = (function (_super) {
         window.removeEventListener('resize', this.resizeListener);
     };
     Chat.prototype.componentWillReceiveProps = function (nextProps) {
+        this.store.dispatch({
+            type: 'Set_Activity_Type',
+            activityType: this.props.activityType
+        });
         if (this.props.adaptiveCardsHostConfig !== nextProps.adaptiveCardsHostConfig) {
             this.store.dispatch({
                 type: 'Set_AdaptiveCardsHostConfig',

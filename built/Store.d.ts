@@ -54,6 +54,7 @@ export interface UiState {
     inputState: boolean;
     pendingUploads: string[];
     erroredUploads: string[];
+    activityType: string;
 }
 export declare type UiAction = {
     type: 'Set_Upload_State';
@@ -67,6 +68,9 @@ export declare type UiAction = {
 } | {
     type: 'Set_Error_Files';
     files: string[];
+} | {
+    type: 'Set_Activity_Type';
+    activityType: string;
 };
 export declare const apUi: Reducer<UiState>;
 export interface FormatState {

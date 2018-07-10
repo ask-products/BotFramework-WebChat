@@ -22,6 +22,7 @@ export interface ChatProps {
     chatHistory?: Activity[];
     channelData?: any;
     themeColour?: string;
+    activityType?: string;
 }
 export declare class Chat extends React.Component<ChatProps, {}> {
     private store;
