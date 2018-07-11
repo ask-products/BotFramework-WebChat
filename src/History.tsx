@@ -163,7 +163,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                                 activity={ activity }
                                 onCardAction={ (type: CardActionTypes, value: string | object) => this.doCardAction(type, value) }
                                 onImageLoad={ () => this.autoscroll() }
-                                interactive={this.amIInteractive(index, this.props.activities.length, activity.channelData.keepActive)}
+                                interactive={this.amIInteractive(index, this.props.activities.length, activity.channelData.keepActive || false)}
                             />
                         </WrappedActivity>
                 );
