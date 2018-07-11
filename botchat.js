@@ -15406,15 +15406,15 @@ var HistoryView = (function (_super) {
         return this.props.doCardAction(type, value);
     };
     HistoryView.prototype.amIInteractive = function (idx, max, flagVal) {
-        // let interactive = false;
-        // if(idx === max-1){
-        // }
-        // if(flagVal === true){
-        //     interactive = true;
-        // }
-        // return interactive;
-        console.log('called interactive check');
-        return true;
+        var interactive = false;
+        if (idx === max - 1) {
+        }
+        if (flagVal === true) {
+            interactive = true;
+        }
+        return interactive;
+        // console.log('called interactive check');
+        // return true;
     };
     HistoryView.prototype.render = function () {
         var _this = this;
@@ -15436,7 +15436,7 @@ var HistoryView = (function (_super) {
                                 e.stopPropagation();
                                 _this.props.onClickRetry(activity);
                             } },
-                            React.createElement(ActivityView_1.ActivityView, { format: _this.props.format, size: _this.props.size, activity: activity, onCardAction: function (type, value) { return _this.doCardAction(type, value); }, onImageLoad: function () { return _this.autoscroll(); }, interactive: _this.amIInteractive(index, _this.props.activities.length, true) }));
+                            React.createElement(ActivityView_1.ActivityView, { format: _this.props.format, size: _this.props.size, activity: activity, onCardAction: function (type, value) { return _this.doCardAction(type, value); }, onImageLoad: function () { return _this.autoscroll(); }, interactive: _this.amIInteractive(index, _this.props.activities.length, activity.channelData.keepActive) }));
                 });
             }
         }
