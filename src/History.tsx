@@ -118,11 +118,12 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
         this.props.onCardAction && this.props.onCardAction();
         return this.props.doCardAction(type, value);
     }
-    private amIInteractive(idx: number, max: number, flagVal: boolean) {
+    private amIInteractive(idx: number, max: number, channelData: any) {
         let interactive = false;
         if(idx === max-1){
+            interactive = false;
         }
-        if(flagVal === true){
+        if(channelData && channelData.keepActive){
             interactive = true;
 
         }
@@ -163,7 +164,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                                 activity={ activity }
                                 onCardAction={ (type: CardActionTypes, value: string | object) => this.doCardAction(type, value) }
                                 onImageLoad={ () => this.autoscroll() }
-                                interactive={this.amIInteractive(index, this.props.activities.length, activity.channelData.keepActive || false)}
+                                interactive={this.amIInteractive(index, this.props.activities.length, activity.channelData || false)}
                             />
                         </WrappedActivity>
                 );
