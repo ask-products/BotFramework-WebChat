@@ -118,7 +118,16 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
         this.props.onCardAction && this.props.onCardAction();
         return this.props.doCardAction(type, value);
     }
+    private amIInteractive(idx: number, max: number, flagVal: boolean) {
+        let interactive = false;
+        if(idx === max-1){
+        }
+        if(flagVal === true){
+            interactive = true;
 
+        }
+        return interactive;
+    }
     render() {
         konsole.log("History props", this);
         let content;
@@ -128,14 +137,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                 this.largeWidth = this.props.size.width * 2;
                 content = <this.measurableCarousel/>;
             } else {
-                content = this.props.activities.map((activity, index) => {
-                    
-                    let interactive = (index === this.props.activities.length-1);
-                    console.log(activity);
-                    // if(activity.channelData.keepActive){
-                    //     interactive = true;
-                    // }
-
+                content = this.props.activities.map((activity, index) =>
                     (activity.type !== 'message' || activity.text || (activity.attachments && activity.attachments.length)) &&
                         <WrappedActivity
                             format={ this.props.format }
@@ -159,10 +161,10 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
                                 activity={ activity }
                                 onCardAction={ (type: CardActionTypes, value: string | object) => this.doCardAction(type, value) }
                                 onImageLoad={ () => this.autoscroll() }
-                                interactive={index === this.props.activities.length-1}
+                                interactive={this.amIInteractive(index, this.props.activities.length, activity.channelData.keepActive)}
                             />
                         </WrappedActivity>
-                });
+                );
             }
         }
 
