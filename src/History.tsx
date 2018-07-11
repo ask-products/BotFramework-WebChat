@@ -119,14 +119,15 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
         return this.props.doCardAction(type, value);
     }
     private amIInteractive(idx: number, max: number, flagVal: boolean) {
-        let interactive = false;
-        if(idx === max-1){
-        }
-        if(flagVal === true){
-            interactive = true;
+        // let interactive = false;
+        // if(idx === max-1){
+        // }
+        // if(flagVal === true){
+        //     interactive = true;
 
-        }
-        return interactive;
+        // }
+        // return interactive;
+        return true;
     }
     render() {
         konsole.log("History props", this);
