@@ -127,6 +127,7 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
 
         // }
         // return interactive;
+        console.log('called interactive check');
         return true;
     }
     render() {
