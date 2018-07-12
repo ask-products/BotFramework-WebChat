@@ -69,6 +69,7 @@ export class ActivityView extends React.Component<ActivityViewProps, {}> {
         const { activity, ... props } = this.props;
         switch (activity.type) {
             case 'message':
+            console.log('interactive: ', props.interactive);
                 return (
                     <div>
                         <FormattedText

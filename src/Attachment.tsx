@@ -197,7 +197,6 @@ export const AttachmentView = (props: {
     };
     switch (attachment.contentType) {
         case "application/vnd.microsoft.card.hero":
-        // console.log(attachment);
         // ASK PRO - is the hero card only containing buttons?
             if( !props.interactive && attachment.content.buttons) 
                 return null;

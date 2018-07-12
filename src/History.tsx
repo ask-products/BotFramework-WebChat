@@ -120,8 +120,8 @@ export class HistoryView extends React.Component<HistoryProps, {}> {
     }
     private amIInteractive(idx: number, max: number, channelData: any) {
         let interactive = false;
-        if(idx = max-1){
-            interactive = false;
+        if(idx === max -1){
+            interactive = true;
         }
         if(channelData && channelData.keepActive){
             interactive = true;
