@@ -72,7 +72,7 @@ var HistoryView = (function (_super) {
     };
     HistoryView.prototype.amIInteractive = function (idx, max, channelData) {
         var interactive = false;
-        if (idx === max - 1) {
+        if (idx = max - 1) {
             interactive = false;
         }
         if (channelData && channelData.keepActive) {

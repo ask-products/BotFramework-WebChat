@@ -20822,7 +20822,6 @@ var ActivityView = (function (_super) {
         var _a = this.props, activity = _a.activity, props = tslib_1.__rest(_a, ["activity"]);
         switch (activity.type) {
             case 'message':
-                console.log('interactive: ', props.interactive);
                 return (React.createElement("div", null,
                     React.createElement(FormattedText_1.FormattedText, { text: activity.text, format: activity.textFormat, onImageLoad: props.onImageLoad }),
                     React.createElement(Attachments, { attachments: activity.attachments, attachmentLayout: activity.attachmentLayout, format: props.format, onCardAction: props.onCardAction, onImageLoad: props.onImageLoad, size: props.size, interactive: props.interactive })));
@@ -21356,7 +21355,7 @@ var HistoryView = (function (_super) {
     };
     HistoryView.prototype.amIInteractive = function (idx, max, channelData) {
         var interactive = false;
-        if (idx === max - 1) {
+        if (idx = max - 1) {
             interactive = false;
         }
         if (channelData && channelData.keepActive) {
