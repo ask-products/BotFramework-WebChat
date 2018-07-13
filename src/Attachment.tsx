@@ -197,7 +197,6 @@ export const AttachmentView = (props: {
     };
     switch (attachment.contentType) {
         case "application/vnd.microsoft.card.hero":
-        console.log(attachment);
         // ASK PRO - is the hero card only containing buttons?
             if( !props.interactive && attachment.content.buttons) 
                 return null;
@@ -311,7 +310,7 @@ export const AttachmentView = (props: {
             );
 
         case "application/vnd.microsoft.card.adaptive":
-            if (!attachment.content)
+            if (!attachment.content || !props.interactive)
                 return null;
             return (
                 <AdaptiveCardContainer interactive={props.interactive} jsonCard={ attachment.content as IAdaptiveCard } onImageLoad={ props.onImageLoad } onCardAction={ props.onCardAction } />

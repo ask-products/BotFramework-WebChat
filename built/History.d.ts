@@ -29,6 +29,7 @@ export declare class HistoryView extends React.Component<HistoryProps, {}> {
     private autoscroll();
     private measurableCarousel;
     private doCardAction(type, value);
+    private amIInteractive(idx, max, activity);
     render(): JSX.Element;
 }
 export declare const History: React.ComponentClass<any>;
