@@ -310,7 +310,7 @@ export const AttachmentView = (props: {
             );
 
         case "application/vnd.microsoft.card.adaptive":
-            if (!attachment.content)
+            if (!attachment.content || !props.interactive)
                 return null;
             return (
                 <AdaptiveCardContainer interactive={props.interactive} jsonCard={ attachment.content as IAdaptiveCard } onImageLoad={ props.onImageLoad } onCardAction={ props.onCardAction } />

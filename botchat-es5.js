@@ -4955,7 +4955,7 @@ exports.AttachmentView = function (props) {
             receiptCardBuilder_1.addButtons(attachment.content.buttons);
             return (React.createElement(AdaptiveCardContainer_1.default, { className: 'receipt', nativeCard: receiptCardBuilder_1.card, onCardAction: props.onCardAction, onClick: onCardAction(attachment.content.tap) }));
         case "application/vnd.microsoft.card.adaptive":
-            if (!attachment.content)
+            if (!attachment.content || !props.interactive)
                 return null;
             return (React.createElement(AdaptiveCardContainer_1.default, { interactive: props.interactive, jsonCard: attachment.content, onImageLoad: props.onImageLoad, onCardAction: props.onCardAction }));
         // Deprecated format for Skype channels. For testing legacy bots in Emulator only.
@@ -21353,17 +21353,17 @@ var HistoryView = (function (_super) {
         this.props.onCardAction && this.props.onCardAction();
         return this.props.doCardAction(type, value);
     };
-    HistoryView.prototype.amIInteractive = function (idx, max, channelData) {
-        // let interactive = false;
-        // if(idx === max -1){
-        //     interactive = true;
-        // }
-        // if(channelData && channelData.keepActive){
-        //     interactive = true;
-        // }
-        // return interactive;
-        console.log(channelData);
-        return true;
+    HistoryView.prototype.amIInteractive = function (idx, max, activity) {
+        var interactive = false;
+        if (idx === max - 1) {
+            interactive = true;
+        }
+        if (activity.channelData && activity.channelData.keepActive) {
+            interactive = true;
+        }
+        return interactive;
+        // console.log('called interactive check');
+        // return true;
     };
     HistoryView.prototype.render = function () {
         var _this = this;
@@ -21385,7 +21385,7 @@ var HistoryView = (function (_super) {
                                 e.stopPropagation();
                                 _this.props.onClickRetry(activity);
                             } },
-                            React.createElement(ActivityView_1.ActivityView, { format: _this.props.format, size: _this.props.size, activity: activity, onCardAction: function (type, value) { return _this.doCardAction(type, value); }, onImageLoad: function () { return _this.autoscroll(); }, interactive: _this.amIInteractive(index, _this.props.activities.length, activity || false) }));
+                            React.createElement(ActivityView_1.ActivityView, { format: _this.props.format, size: _this.props.size, activity: activity, onCardAction: function (type, value) { return _this.doCardAction(type, value); }, onImageLoad: function () { return _this.autoscroll(); }, interactive: _this.amIInteractive(index, _this.props.activities.length, activity) }));
                 });
             }
         }

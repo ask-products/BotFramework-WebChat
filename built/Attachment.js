@@ -199,7 +199,7 @@ exports.AttachmentView = function (props) {
             receiptCardBuilder_1.addButtons(attachment.content.buttons);
             return (React.createElement(AdaptiveCardContainer_1.default, { className: 'receipt', nativeCard: receiptCardBuilder_1.card, onCardAction: props.onCardAction, onClick: onCardAction(attachment.content.tap) }));
         case "application/vnd.microsoft.card.adaptive":
-            if (!attachment.content)
+            if (!attachment.content || !props.interactive)
                 return null;
             return (React.createElement(AdaptiveCardContainer_1.default, { interactive: props.interactive, jsonCard: attachment.content, onImageLoad: props.onImageLoad, onCardAction: props.onCardAction }));
         // Deprecated format for Skype channels. For testing legacy bots in Emulator only.
