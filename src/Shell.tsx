@@ -129,6 +129,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
     }
 
     private onClickMic() {
+        console.log('mic clicked');
         if (this.props.listeningState === ListeningState.STARTED) {
             this.props.stopListening();
         }
