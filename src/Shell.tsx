@@ -129,14 +129,11 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
     }
 
     private onClickMic() {
-        console.log('mic clicked');
         if (this.props.listeningState === ListeningState.STARTED) {
             this.props.stopListening();
+        } else if (this.props.listeningState === ListeningState.STOPPED) {
+            this.props.startListening();
         }
-        // ASKPRO preventing the mic functionality
-        // } else if (this.props.listeningState === ListeningState.STOPPED) {
-        //     this.props.startListening();
-        // }
     }
 
     public focus(appendKey?: string) {
@@ -269,7 +266,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                 </button>
                 <button
                     className={ micButtonClassName }
-                    onClick={ () => this.onClickMic() }
+                    // onClick={ () => this.onClickMic() }
                     aria-label={ this.props.strings.speak }
                     role="button"
                     tabIndex={ 0 }
