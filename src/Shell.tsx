@@ -266,7 +266,8 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                 </button>
                 <button
                     className={ micButtonClassName }
-                    onClick={ () => this.onClickMic() }
+                    // ASK PRO - disabled this feature until we need it, and can work out why it's buggin out in mobile iOS.
+                    // onClick={ () => this.onClickMic() }
                     aria-label={ this.props.strings.speak }
                     role="button"
                     tabIndex={ 0 }
