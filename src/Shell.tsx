@@ -131,9 +131,11 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
     private onClickMic() {
         if (this.props.listeningState === ListeningState.STARTED) {
             this.props.stopListening();
-        } else if (this.props.listeningState === ListeningState.STOPPED) {
-            this.props.startListening();
         }
+        // ASKPRO preventing the mic functionality
+        // } else if (this.props.listeningState === ListeningState.STOPPED) {
+        //     this.props.startListening();
+        // }
     }
 
     public focus(appendKey?: string) {
@@ -264,7 +266,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                         <polygon id="Combined-Shape" points="5.01141071 6 5 14.1666484 22.1428571 16.5 5 18.8333516 5.01141071 27 29 16.5"></polygon>
                     </svg>
                 </button>
-                {/* <button
+                <button
                     className={ micButtonClassName }
                     onClick={ () => this.onClickMic() }
                     aria-label={ this.props.strings.speak }
@@ -278,7 +280,7 @@ class ShellContainer extends React.Component<Props> implements ShellFunctions {
                         <path id="micFilling" d="M 28.97 44.438 L 28.97 44.438 C 23.773 44.438 19.521 40.033 19.521 34.649 L 19.521 11.156 C 19.521 5.772 23.773 1.368 28.97 1.368 L 28.97 1.368 C 34.166 1.368 38.418 5.772 38.418 11.156 L 38.418 34.649 C 38.418 40.033 34.166 44.438 28.97 44.438 Z"/>
                         <path d="M 29 46 C 35.065 46 40 41.065 40 35 L 40 11 C 40 4.935 35.065 0 29 0 C 22.935 0 18 4.935 18 11 L 18 35 C 18 41.065 22.935 46 29 46 Z M 20 11 C 20 6.037 24.038 2 29 2 C 33.962 2 38 6.037 38 11 L 38 35 C 38 39.963 33.962 44 29 44 C 24.038 44 20 39.963 20 35 L 20 11 Z"/>
                     </svg>
-                </button> */}
+                </button>
             </div>
         );
     }
