@@ -27,3 +27,5 @@ webpacked
 # *.css
 /test/uploads
 .env
+
+.DS_Store
