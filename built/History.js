@@ -70,8 +70,6 @@ var HistoryView = (function (_super) {
         this.props.onCardAction && this.props.onCardAction();
         return this.props.doCardAction(type, value);
     };
-<<<<<<< HEAD
-=======
     HistoryView.prototype.amIInteractive = function (idx, max, activity) {
         var interactive = false;
         if (idx === max - 1) {
@@ -84,7 +82,6 @@ var HistoryView = (function (_super) {
         // console.log('called interactive check');
         // return true;
     };
->>>>>>> development
     HistoryView.prototype.render = function () {
         var _this = this;
         konsole.log("History props", this);
@@ -105,11 +102,7 @@ var HistoryView = (function (_super) {
                                 e.stopPropagation();
                                 _this.props.onClickRetry(activity);
                             } },
-<<<<<<< HEAD
-                            React.createElement(ActivityView_1.ActivityView, { format: _this.props.format, size: _this.props.size, activity: activity, onCardAction: function (type, value) { return _this.doCardAction(type, value); }, onImageLoad: function () { return _this.autoscroll(); }, interactive: index === _this.props.activities.length - 1 }));
-=======
                             React.createElement(ActivityView_1.ActivityView, { format: _this.props.format, size: _this.props.size, activity: activity, onCardAction: function (type, value) { return _this.doCardAction(type, value); }, onImageLoad: function () { return _this.autoscroll(); }, interactive: _this.amIInteractive(index, _this.props.activities.length, activity) }));
->>>>>>> development
                 });
             }
         }
