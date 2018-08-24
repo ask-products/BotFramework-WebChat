@@ -44,6 +44,9 @@ import { History } from './History';
 import { MessagePane } from './MessagePane';
 import { Shell, ShellFunctions } from './Shell';
 
+// ASKPRO -- action menu
+import { ActionMenu } from './ask_pro/ActionMenu';
+
 export class Chat extends React.Component<ChatProps, {}> {
 
     private store = createStore();
@@ -354,6 +357,7 @@ export class Chat extends React.Component<ChatProps, {}> {
                         this.props.resize === 'detect' &&
                             <ResizeDetector onresize={ this.resizeListener } />
                     }
+                    <ActionMenu/>
                 </div>
             </Provider>
         );
